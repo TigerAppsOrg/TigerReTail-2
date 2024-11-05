@@ -1,0 +1,96 @@
+enum affiliation {
+  ias
+  princeton
+}
+
+enum category {
+  accessories
+  "beauty supplies"
+  clothing
+  "dorm essentials"
+  "event tickets"
+  food
+  furniture
+  housing
+  other
+  "school supplies"
+  services
+  tech
+  textbooks
+  transportation
+}
+
+enum item_type {
+  sell
+  rent
+}
+
+enum quality {
+  new
+  "like new"
+  good
+  fair
+  poor
+}
+
+enum status {
+  active
+  inactive
+  sold
+  expired
+}
+
+table item_images {
+  id serial [pk, not null, increment]
+  item_id integer [not null]
+  url text [not null]
+}
+
+table items {
+  id serial [pk, not null, increment]
+  user_id text [not null]
+  time_posted timestamp [not null]
+  time_expire timestamp [not null]
+  name text [not null]
+  price numeric [not null]
+  quality quality
+  description text
+  status status [not null]
+  item_type item_type [not null]
+  category category [not null]
+}
+
+table request_images {
+  id serial [pk, not null, increment]
+  request_id integer [not null]
+  url text [not null]
+}
+
+table requests {
+  id serial [pk, not null, increment]
+  user_id integer [not null]
+  time_posted timestamp [not null]
+  time_expire timestamp [not null]
+  name text [not null]
+  price numeric [not null]
+  description text
+  category category [not null]
+}
+
+table user {
+  id serial [pk, not null, increment]
+  email text [not null]
+  name text [not null]
+  affiliation affiliation [not null]
+  age integer [not null]
+  text text
+  phone text
+}
+
+ref: item_images.item_id > items.id
+
+ref: items.user_id > user.id
+
+ref: request_images.request_id > requests.id
+
+ref: requests.user_id > user.id
