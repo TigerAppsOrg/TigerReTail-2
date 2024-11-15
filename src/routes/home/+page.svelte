@@ -4,13 +4,13 @@
     import LeftBar from "$lib/components/LeftBar.svelte";
 </script>
 
-<div class="flex h-screen flex-col overflow-hidden">
+<div class="flex h-screen flex-col overflow-hidden bg-green-200">
     <Header />
-    <div class="flex flex-1 bg-green-200">
+    <div class="flex flex-1">
         <aside>
             <LeftBar />
         </aside>
-        <main class="flex-1 bg-blue-200">
+        <main class="flex-1 bg-white">
             <ItemView />
         </main>
     </div>
