@@ -1,6 +1,7 @@
 <script lang="ts">
     import ItemCard from './ItemCard.svelte';
 
+
     import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
 
     import { Input } from "$lib/components/ui/input/index.js";
@@ -9,7 +10,14 @@
     import ChevronRight from "lucide-svelte/icons/chevron-right";
     import { MediaQuery } from "runed";
     import * as Pagination from "$lib/components/ui/pagination/index.js";
-    import { onMount } from 'svelte';
+
+    function handlePageChange(newPage: number) {
+        currentPage = newPage;
+        // Logic to update displayed products based on newPage can be added here.
+    }
+
+    let itemsPerPage = 4; // Adjust this to match your items per page
+    $: displayedProducts = products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     type Product = {
         id: number;
