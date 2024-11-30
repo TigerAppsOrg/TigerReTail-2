@@ -2,6 +2,7 @@ import { env } from "$env/dynamic/private";
 import postgres from "postgres";
 import type { DB } from "$lib/server/retrofit/old";
 import type { RequestEvent } from "@sveltejs/kit";
+import { convertUsers } from "$lib/server/retrofit/conversion";
 
 export let POST = async (req: RequestEvent) => {
     return new Response("Disabled in production", {
@@ -27,11 +28,7 @@ if (import.meta.env.MODE === "development") {
             })
         });
 
-        const users = await oldDB
-            .selectFrom("marketplace_account")
-            .selectAll()
-            .execute();
-        console.log(users);
+        convertUsers(oldDB);
 
         const response = {
             message: "Completed!"

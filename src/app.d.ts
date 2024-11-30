@@ -1,9 +1,11 @@
+import type { Affiliation } from "$lib/server/db/schema";
 import type { Session } from "svelte-kit-cookie-session";
 
 export type SessionData = {
-    netid: string | null;
     name: string;
     mail: string;
+    affiliation: Affiliation;
+    netid: string | null;
 };
 
 declare global {

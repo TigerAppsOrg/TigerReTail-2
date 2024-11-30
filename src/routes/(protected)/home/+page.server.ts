@@ -8,18 +8,18 @@
 import type { Actions, ServerLoad } from "@sveltejs/kit";
 import { CASClient } from "$lib/server/db/cas";
 
-export const load: ServerLoad = async req => {
-    const sessionData = req.locals.session.data;
-    if (!sessionData.name) {
-        // Redirect to CAS server if no session
-        CASClient.authenticate();
-    }
+// export const load: ServerLoad = async req => {
+//     const sessionData = req.locals.session.data;
+//     if (!sessionData.name) {
+//         // Redirect to CAS server if no session
+//         CASClient.authenticate();
+//     }
 
-    return {};
-};
+//     return {};
+// };
 
-export const actions: Actions = {
-    logout: async ({ locals }) => {
-        await CASClient.logout(locals);
-    }
-};
+// export const actions: Actions = {
+//     logout: async ({ locals }) => {
+//         await CASClient.logout(locals);
+//     }
+// };

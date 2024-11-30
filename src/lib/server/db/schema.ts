@@ -5,20 +5,41 @@ import {
     integer,
     pgEnum,
     timestamp,
-    numeric
+    numeric,
+    boolean
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
+// Each user has either a netid or a pwdAuth entry. If no netid but no pwdAuth, then user should be migrated.
+export const pwdAuth = pgTable("pwd_auth", {
+    id: serial("id").primaryKey(),
+    password: text("password").notNull(),
+    user_id: integer("user_id")
+        .notNull()
+        .references(() => user.id, {}),
+    verified: boolean("verified").notNull()
+});
+
+export const pwdAuthRelations = relations(pwdAuth, ({ one }) => ({
+    user: one(user, {
+        fields: [pwdAuth.user_id],
+        references: [user.id]
+    })
+}));
+
 export const affiliationEnum = pgEnum("affiliation", ["ias", "princeton"]);
+export type Affiliation = (typeof affiliationEnum.enumValues)[number];
 
 export const user = pgTable("user", {
     id: serial("id").primaryKey(),
     email: text("email").notNull(),
     name: text("name").notNull(),
     affiliation: affiliationEnum("affiliation").notNull(),
-    age: integer("age").notNull(),
+    netid: text("netid"),
+    // class_year: integer("age"),
     bio: text("text"),
-    phone: text("phone")
+    phone: text("phone"),
+    legacy_id: integer("legacy_id").unique()
 });
 
 export const qualityEnum = pgEnum("quality", [
@@ -28,14 +49,18 @@ export const qualityEnum = pgEnum("quality", [
     "fair",
     "poor"
 ]);
+export type Quality = (typeof qualityEnum.enumValues)[number];
+
 export const statusEnum = pgEnum("status", [
     "active",
     "inactive",
     "sold",
     "expired"
 ]);
+export type Status = (typeof statusEnum.enumValues)[number];
 
 export const itemTypesEnum = pgEnum("item_type", ["sell", "rent"]);
+export type ItemType = (typeof itemTypesEnum.enumValues)[number];
 
 export const categoriesEnum = pgEnum("category", [
     "accessories",
@@ -53,6 +78,7 @@ export const categoriesEnum = pgEnum("category", [
     "textbooks",
     "transportation"
 ]);
+export type Category = (typeof categoriesEnum.enumValues)[number];
 
 export const userRelations = relations(user, ({ many }) => ({
     items: many(items),
@@ -61,7 +87,7 @@ export const userRelations = relations(user, ({ many }) => ({
 
 export const items = pgTable("items", {
     id: serial("id").primaryKey(),
-    user_id: text("user_id")
+    user_id: integer("user_id")
         .notNull()
         .references(() => user.id, {}),
     time_posted: timestamp("time_posted").notNull(),
@@ -72,7 +98,8 @@ export const items = pgTable("items", {
     description: text("description"),
     status: statusEnum("status").notNull(),
     item_type: itemTypesEnum("item_type").notNull(),
-    category: categoriesEnum("category").notNull()
+    category: categoriesEnum("category").notNull(),
+    legacy_id: integer("legacy_id").unique()
 });
 
 export const itemsRelations = relations(items, ({ one, many }) => ({
