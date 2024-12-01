@@ -1,15 +1,23 @@
+import { relations } from "drizzle-orm";
 import {
+    integer,
+    numeric,
+    pgEnum,
     pgTable,
     serial,
     text,
-    integer,
-    pgEnum,
-    timestamp,
-    numeric
+    timestamp
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
 
-export const affiliationEnum = pgEnum("affiliation", ["ias", "princeton"]);
+import {
+    AFFILIATIONS,
+    CATEGORIES,
+    ITEM_TYPES,
+    QUALITIES,
+    STATUSES
+} from "$lib";
+
+export const affiliationEnum = pgEnum("affiliation", AFFILIATIONS);
 
 export const user = pgTable("user", {
     id: serial("id").primaryKey(),
@@ -21,38 +29,12 @@ export const user = pgTable("user", {
     phone: text("phone")
 });
 
-export const qualityEnum = pgEnum("quality", [
-    "new",
-    "like new",
-    "good",
-    "fair",
-    "poor"
-]);
-export const statusEnum = pgEnum("status", [
-    "active",
-    "inactive",
-    "sold",
-    "expired"
-]);
+export const qualityEnum = pgEnum("quality", QUALITIES);
+export const statusEnum = pgEnum("status", STATUSES);
 
-export const itemTypesEnum = pgEnum("item_type", ["sell", "rent"]);
+export const itemTypesEnum = pgEnum("item_type", ITEM_TYPES);
 
-export const categoriesEnum = pgEnum("category", [
-    "accessories",
-    "beauty supplies",
-    "clothing",
-    "dorm essentials",
-    "event tickets",
-    "food",
-    "furniture",
-    "housing",
-    "other",
-    "school supplies",
-    "services",
-    "tech",
-    "textbooks",
-    "transportation"
-]);
+export const categoriesEnum = pgEnum("category", CATEGORIES);
 
 export const userRelations = relations(user, ({ many }) => ({
     items: many(items),
