@@ -17,7 +17,10 @@
         </a>
 
         <div class="flex items-center space-x-4">
-            <Button onclick={() => {}}>Post</Button>
+            <Button
+                onclick={() => {
+                    goto("/post");
+                }}>Post</Button>
 
             <DropdownMenu>
                 <DropdownMenuTrigger>
