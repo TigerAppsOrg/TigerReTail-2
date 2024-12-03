@@ -4,7 +4,7 @@
     import LeftBar from "$lib/components/LeftBar.svelte";
 </script>
 
-<div class="flex h-screen flex-col overflow-hidden bg-green-200">
+<div class="flex h-screen flex-col overflow-auto bg-green-200">
     <Header />
     <div class="flex flex-1">
         <aside>
