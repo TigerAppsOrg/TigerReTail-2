@@ -58,7 +58,7 @@
     <Input />
 </div>
 
-<ScrollArea class="pb-20 border-2 border-red-500 h-[85vh] rounded-md border p-4">
+<ScrollArea class="pb-20 h-[85vh] rounded-md border p-4">
 
     <!--- grid of products -->
     <div class="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
