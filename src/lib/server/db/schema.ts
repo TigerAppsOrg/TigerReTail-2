@@ -98,7 +98,6 @@ export const items = pgTable("items", {
     description: text("description"),
     status: statusEnum("status").notNull(),
     item_type: itemTypesEnum("item_type").notNull(),
-    category: categoriesEnum("category").notNull(),
     legacy_id: integer("legacy_id").unique()
 });
 
@@ -107,7 +106,24 @@ export const itemsRelations = relations(items, ({ one, many }) => ({
         fields: [items.user_id],
         references: [user.id]
     }),
+    categories: many(itemCategories),
     images: many(itemImages)
+}));
+
+export const itemCategories = pgTable("item_categories", {
+    id: serial("id").primaryKey(),
+    item_id: integer("item_id")
+        .notNull()
+        .references(() => items.id, {}),
+    category: categoriesEnum("category").notNull(),
+    legacy_id: integer("legacy_id").unique()
+});
+
+export const itemCategoriesRelations = relations(itemCategories, ({ one }) => ({
+    item: one(items, {
+        fields: [itemCategories.item_id],
+        references: [items.id]
+    })
 }));
 
 export const itemImages = pgTable("item_images", {
@@ -115,7 +131,7 @@ export const itemImages = pgTable("item_images", {
     item_id: integer("item_id")
         .notNull()
         .references(() => items.id, {}),
-    url: text("url").notNull()
+    url: text("url").notNull().unique()
 });
 
 export const itemImagesRelations = relations(itemImages, ({ one }) => ({
@@ -135,7 +151,7 @@ export const requests = pgTable("requests", {
     name: text("name").notNull(),
     price: numeric("price").notNull(),
     description: text("description"),
-    category: categoriesEnum("category").notNull()
+    legacy_id: integer("legacy_id").unique()
 });
 
 export const requestsRelations = relations(requests, ({ one, many }) => ({
@@ -143,8 +159,28 @@ export const requestsRelations = relations(requests, ({ one, many }) => ({
         fields: [requests.user_id],
         references: [user.id]
     }),
+    categories: many(requestCategories),
     images: many(requestImages)
 }));
+
+export const requestCategories = pgTable("request_categories", {
+    id: serial("id").primaryKey(),
+    request_id: integer("request_id")
+        .notNull()
+        .references(() => requests.id, {}),
+    category: categoriesEnum("category").notNull(),
+    legacy_id: integer("legacy_id").unique()
+});
+
+export const requestCategoriesRelations = relations(
+    requestCategories,
+    ({ one }) => ({
+        request: one(requests, {
+            fields: [requestCategories.request_id],
+            references: [requests.id]
+        })
+    })
+);
 
 export const requestImages = pgTable("request_images", {
     id: serial("id").primaryKey(),
