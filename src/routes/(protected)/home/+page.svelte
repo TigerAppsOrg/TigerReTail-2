@@ -2,6 +2,10 @@
     import Header from "$lib/components/Header.svelte";
     import ItemView from "$lib/components/ItemView.svelte";
     import LeftBar from "$lib/components/LeftBar.svelte";
+
+    let { data } = $props();
+
+    console.log(data.props.items);
 </script>
 
 <div class="flex h-screen flex-col overflow-hidden bg-green-200">
