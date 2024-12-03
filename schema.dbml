@@ -1,0 +1,121 @@
+enum affiliation {
+  ias
+  princeton
+}
+
+enum category {
+  accessories
+  "beauty supplies"
+  clothing
+  "dorm essentials"
+  "event tickets"
+  food
+  furniture
+  housing
+  other
+  "school supplies"
+  services
+  tech
+  textbooks
+  transportation
+}
+
+enum item_type {
+  sell
+  rent
+}
+
+enum quality {
+  new
+  "like new"
+  good
+  fair
+  poor
+}
+
+enum status {
+  active
+  inactive
+  sold
+  expired
+}
+
+table item_categories {
+  id serial [pk, not null, increment]
+  item_id integer [not null]
+  category category [not null]
+}
+
+table item_images {
+  id serial [pk, not null, increment]
+  item_id integer [not null]
+  url text [not null]
+}
+
+table items {
+  id serial [pk, not null, increment]
+  user_id integer [not null]
+  time_posted timestamp [not null]
+  time_expire timestamp [not null]
+  name text [not null]
+  price numeric [not null]
+  quality quality
+  description text
+  status status [not null]
+  item_type item_type [not null]
+  legacy_id integer [unique]
+}
+
+table pwd_auth {
+  id serial [pk, not null, increment]
+  password text [not null]
+  user_id integer [not null]
+  verified boolean [not null]
+}
+
+table request_categories {
+  id serial [pk, not null, increment]
+  request_id integer [not null]
+  category category [not null]
+}
+
+table request_images {
+  id serial [pk, not null, increment]
+  request_id integer [not null]
+  url text [not null]
+}
+
+table requests {
+  id serial [pk, not null, increment]
+  user_id integer [not null]
+  time_posted timestamp [not null]
+  time_expire timestamp [not null]
+  name text [not null]
+  price numeric [not null]
+  description text
+}
+
+table user {
+  id serial [pk, not null, increment]
+  email text [not null]
+  name text [not null]
+  affiliation affiliation [not null]
+  netid text
+  text text
+  phone text
+  legacy_id integer [unique]
+}
+
+ref: item_categories.item_id > items.id
+
+ref: item_images.item_id > items.id
+
+ref: items.user_id > user.id
+
+ref: pwd_auth.user_id - user.id
+
+ref: request_categories.request_id > requests.id
+
+ref: request_images.request_id > requests.id
+
+ref: requests.user_id > user.id
