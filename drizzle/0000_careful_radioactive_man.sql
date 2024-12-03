@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS "item_images" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "items" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"user_id" text NOT NULL,
+	"user_id" integer NOT NULL,
 	"time_posted" timestamp NOT NULL,
 	"time_expire" timestamp NOT NULL,
 	"name" text NOT NULL,
@@ -45,7 +45,16 @@ CREATE TABLE IF NOT EXISTS "items" (
 	"description" text,
 	"status" "status" NOT NULL,
 	"item_type" "item_type" NOT NULL,
-	"category" "category" NOT NULL
+	"category" "category" NOT NULL,
+	"legacy_id" integer,
+	CONSTRAINT "items_legacy_id_unique" UNIQUE("legacy_id")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "pwd_auth" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"password" text NOT NULL,
+	"user_id" integer NOT NULL,
+	"verified" boolean NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "request_images" (
@@ -70,9 +79,11 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"email" text NOT NULL,
 	"name" text NOT NULL,
 	"affiliation" "affiliation" NOT NULL,
-	"age" integer NOT NULL,
+	"netid" text,
 	"text" text,
-	"phone" text
+	"phone" text,
+	"legacy_id" integer,
+	CONSTRAINT "user_legacy_id_unique" UNIQUE("legacy_id")
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -83,6 +94,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "items" ADD CONSTRAINT "items_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pwd_auth" ADD CONSTRAINT "pwd_auth_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

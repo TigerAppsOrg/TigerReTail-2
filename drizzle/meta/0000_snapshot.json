@@ -1,5 +1,5 @@
 {
-  "id": "804b440c-03e2-413e-bf09-3b5db48c253d",
+  "id": "6a334817-81a8-451f-b7b3-11bfd47b3f7b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -58,7 +58,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -119,6 +119,12 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
+        },
+        "legacy_id": {
+          "name": "legacy_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -126,6 +132,62 @@
         "items_user_id_user_id_fk": {
           "name": "items_user_id_user_id_fk",
           "tableFrom": "items",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "items_legacy_id_unique": {
+          "name": "items_legacy_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "legacy_id"
+          ]
+        }
+      }
+    },
+    "public.pwd_auth": {
+      "name": "pwd_auth",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified": {
+          "name": "verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pwd_auth_user_id_user_id_fk": {
+          "name": "pwd_auth_user_id_user_id_fk",
+          "tableFrom": "pwd_auth",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -284,11 +346,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "age": {
-          "name": "age",
-          "type": "integer",
+        "netid": {
+          "name": "netid",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "text": {
           "name": "text",
@@ -301,12 +363,26 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "legacy_id": {
+          "name": "legacy_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "user_legacy_id_unique": {
+          "name": "user_legacy_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "legacy_id"
+          ]
+        }
+      }
     }
   },
   "enums": {

@@ -13,7 +13,7 @@ import {
 } from "@sveltejs/kit";
 // import * as schema from "$lib/server/db/schema";
 import { CASClient } from "$lib/server/db/cas";
-// import { db } from "$lib/server/db/schema";
+import { createUser, getUserByNetID } from "$lib/server/db";
 
 // Validate a CAS login ticket and set the user's session data
 export const GET: RequestHandler = async (req: RequestEvent) => {
@@ -26,17 +26,17 @@ export const GET: RequestHandler = async (req: RequestEvent) => {
     }
 
     const userInfo = await CASClient.validate(ticket);
-    if (!userInfo) {
+    if (!userInfo || !userInfo.netid) {
         console.error("CAS authentication failed");
         return new Response("CAS authentication failed", {
             status: 401
         });
     }
 
-    // const existingUser = db.getUser(userInfo.netid);
-    // if (!existingUser) {
-    //     await db.database.insert(schema.users).values(userInfo);
-    // }
+    const existingUser = getUserByNetID(userInfo.netid);
+    if (!existingUser) {
+        await createUser(userInfo.netid!, userInfo.name, userInfo.mail);
+    }
 
     await req.locals.session.set(userInfo);
     redirect(302, "/home");

@@ -12,7 +12,7 @@ import type { SessionData } from "../../../app";
 
 export class CASClient {
     // URL of the service that the CAS server will redirect to
-    private static APP_URL = "http://localhost:5173/auth/";
+    private static APP_URL = "http://localhost:5173/auth/princeton/callback";
 
     // CAS server URL
     private static CAS_URL = "https://fed.princeton.edu/cas/";
@@ -56,9 +56,10 @@ export class CASClient {
             const userInfo = serviceResponse.authenticationSuccess;
 
             return {
-                netid: userInfo.user,
                 name: userInfo.attributes.displayname[0] || "Student",
-                mail: userInfo.attributes.mail[0] || ""
+                mail: userInfo.attributes.mail[0] || "",
+                affiliation: "princeton",
+                netid: userInfo.user
             };
         } else if (this.hasKey(serviceResponse, "authenticationFailure")) {
             console.error("CAS authentication failure:", serviceResponse);
@@ -75,7 +76,7 @@ export class CASClient {
      * @returns The user's session data, or null if the user is not logged in
      */
     static authenticate() {
-        throw redirect(
+        redirect(
             302,
             this.CAS_URL + "login?service=" + this.urlEncode(this.APP_URL)
         );
@@ -87,6 +88,6 @@ export class CASClient {
      */
     static async logout(locals: App.Locals) {
         await locals.session.destroy();
-        throw redirect(302, "/");
+        redirect(302, "/");
     }
 }

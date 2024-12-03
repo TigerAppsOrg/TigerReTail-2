@@ -60,6 +60,13 @@ table items {
   category category [not null]
 }
 
+table pwd_auth {
+  id serial [pk, not null, increment]
+  password text [not null]
+  user_id integer [not null]
+  verified boolean [not null]
+}
+
 table request_images {
   id serial [pk, not null, increment]
   request_id integer [not null]
@@ -85,11 +92,15 @@ table user {
   age integer [not null]
   text text
   phone text
+  legacy_id integer
+  netid text
 }
 
 ref: item_images.item_id > items.id
 
 ref: items.user_id > user.id
+
+ref: pwd_auth.user_id - user.id
 
 ref: request_images.request_id > requests.id
 
