@@ -25,7 +25,7 @@ export const GET: RequestHandler = async (req: RequestEvent) => {
         });
     }
 
-    const userInfo = await CASClient.validate(ticket);
+    let userInfo = await CASClient.validate(ticket);
     if (!userInfo || !userInfo.netid) {
         console.error("CAS authentication failed");
         return new Response("CAS authentication failed", {
@@ -35,7 +35,12 @@ export const GET: RequestHandler = async (req: RequestEvent) => {
 
     const existingUser = getUserByNetID(userInfo.netid);
     if (!existingUser) {
-        await createUser(userInfo.netid!, userInfo.name, userInfo.mail);
+        const id = await createUser(
+            userInfo.netid!,
+            userInfo.name,
+            userInfo.mail
+        );
+        userInfo.id = id;
     }
 
     await req.locals.session.set(userInfo);

@@ -6,6 +6,7 @@ export type SessionData = {
     mail: string;
     affiliation: Affiliation;
     netid: string | null;
+    id: number;
 };
 
 declare global {

@@ -23,7 +23,7 @@ export const createUser = async (
     name: string,
     email: string
 ) => {
-    await db
+    let user = await db
         .insert(schema.user)
         .values({
             name,
@@ -31,5 +31,6 @@ export const createUser = async (
             affiliation: "princeton",
             netid
         })
-        .execute();
+        .returning({ id: schema.user.id });
+    return user[0].id;
 };

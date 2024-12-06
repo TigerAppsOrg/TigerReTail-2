@@ -7,7 +7,7 @@
  * originally by Alex Halderman, Scott Karlin, Brian Kernighan, and Bob Dondero.
  */
 
-import { redirect } from "@sveltejs/kit";
+import { redirect, type RequestEvent } from "@sveltejs/kit";
 import type { SessionData } from "../../../app";
 
 export class CASClient {
@@ -59,7 +59,8 @@ export class CASClient {
                 name: userInfo.attributes.displayname[0] || "Student",
                 mail: userInfo.attributes.mail[0] || "",
                 affiliation: "princeton",
-                netid: userInfo.user
+                netid: userInfo.user,
+                id: 0
             };
         } else if (this.hasKey(serviceResponse, "authenticationFailure")) {
             console.error("CAS authentication failure:", serviceResponse);
@@ -91,3 +92,9 @@ export class CASClient {
         redirect(302, "/");
     }
 }
+
+export const checkAuthentication = (sessionData: SessionData) => {
+    if (!sessionData.name) {
+        redirect(302, "/");
+    }
+};
