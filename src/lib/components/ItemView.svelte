@@ -17,6 +17,7 @@
         itemDescription: string;
         price: number;
         seller: string;
+        category: string;
     };
 
     // REVISE: Placeholder list of products
@@ -27,7 +28,8 @@
             image: "../../../../textbook.png",
             price: 999.99,
             itemDescription: "A high-performance laptop",
-            seller: "Seller 1"
+            seller: "Seller 1",
+            category: "Dorm"
         },
         {
             id: 2,
@@ -35,7 +37,8 @@
             image: "../../../../textbook.png",
             price: 699.99,
             itemDescription: "Latest model smartphone",
-            seller: "Seller 2"
+            seller: "Seller 2",
+            category: "Dorm"
         },
         {
             id: 3,
@@ -43,7 +46,8 @@
             image: "../../../../textbook.png",
             price: 199.99,
             itemDescription: "Noise-cancelling headphones",
-            seller: "Seller 3"
+            seller: "Seller 3",
+            category: "Dorm"
         },
         {
             id: 4,
@@ -51,7 +55,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm"
         },
         {
             id: 5,
@@ -59,7 +64,8 @@
             image: "../../../../textbook.png",
             price: 999.99,
             itemDescription: "A high-performance laptop",
-            seller: "Seller 1"
+            seller: "Seller 1",
+            category: "Dorm"
         },
         {
             id: 6,
@@ -67,7 +73,8 @@
             image: "../../../../textbook.png",
             price: 699.99,
             itemDescription: "Latest model smartphone",
-            seller: "Seller 2"
+            seller: "Seller 2",
+            category: "Dorm"
         },
         {
             id: 7,
@@ -75,7 +82,8 @@
             image: "../../../../textbook.png",
             price: 199.99,
             itemDescription: "Noise-cancelling headphones",
-            seller: "Seller 3"
+            seller: "Seller 3",
+            category: "Dorm"
         },
         {
             id: 8,
@@ -83,7 +91,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm"
         },
         {
             id: 9,
@@ -91,7 +100,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm"
         },
         {
             id: 10,
@@ -99,7 +109,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm"
         },
         {
             id: 11,
@@ -107,7 +118,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm"
         },
         {
             id: 12,
@@ -115,7 +127,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm"
         },
         {
             id: 13,
@@ -123,7 +136,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm",
         },
         {
             id: 14,
@@ -131,7 +145,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm"
         },
         {
             id: 15,
@@ -139,7 +154,8 @@
             image: "../../../../textbook.png",
             price: 20.99,
             itemDescription: "Wooden table for dorm",
-            seller: "Seller 4"
+            seller: "Seller 4",
+            category: "Dorm"
         }
     ];
 
@@ -173,7 +189,9 @@
                 image={product.image}
                 itemDescription={product.itemDescription}
                 price={product.price}
-                seller={product.seller}></ItemCard>
+                seller={product.seller}
+                category={product.category}>
+            </ItemCard>
         {/each}
     </div>
 
@@ -188,17 +206,61 @@
                     <ChevronLeft class="size-4" />
                     <span class="hidden sm:block">Previous</span>
                 </Pagination.PrevButton>
-                {#each Array(totalPages)
-                    .fill(0)
-                    .map( (_, index) => ({ value: index + 1 }) ) as page (page.value)}
-                    <Pagination.Item>
-                        <Pagination.Link
-                            page={page.value}
-                            isActive={currentPage === page.value}>
-                            {page.value}
-                        </Pagination.Link>
-                    </Pagination.Item>
-                {/each}
+                {#if totalPages <= 3}
+                    {#each Array(totalPages)
+                        .fill(0)
+                        .map( (_, index) => ({ value: index + 1 }) ) as page (page.value)}
+                        <Pagination.Item>
+                            <Pagination.Link
+                                page={page.value}
+                                isActive={currentPage === page.value}>
+                                {page.value}
+                            </Pagination.Link>
+                        </Pagination.Item>
+                    {/each}
+                {:else}
+                    {#if currentPage > 2}
+                         <Pagination.Item>
+                            <Pagination.Link
+                                page={1}>
+                            </Pagination.Link>
+                            1
+                        </Pagination.Item>
+                        {#if currentPage > 3}
+                             <Pagination.Item>
+                                <span>...</span>
+                            </Pagination.Item>
+                        {/if}
+                    {/if}
+
+                    {#each [
+                        Math.max(1, currentPage - 1),
+                        currentPage,
+                        Math.min(totalPages, currentPage + 1)
+                    ] as page}
+                        {#if page > 0 && page <= totalPages}
+                            <Pagination.Item>
+                                <Pagination.Link
+                                    page={page}
+                                    isActive={currentPage === page}>
+                                    {page}
+                                </Pagination.Link>
+                            </Pagination.Item>
+                        {/if}
+                    {/each}
+                    
+                    {#if currentPage < totalPages - 1}
+                        {#if currentPage < totalPages - 2}
+                            <Pagination.Item>
+                                <span>...</span>
+                            </Pagination.Item>
+                        {/if}
+                        <Pagination.Item>
+                            <Pagination.Link page={totalPages}>{totalPages}</Pagination.Link>
+                        </Pagination.Item>
+                    {/if}
+                {/if}
+
                 <Pagination.NextButton>
                     <span class="hidden sm:block">Next</span>
                     <ChevronRight class="size-4" />
