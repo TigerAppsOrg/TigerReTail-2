@@ -137,7 +137,7 @@
             price: 20.99,
             itemDescription: "Wooden table for dorm",
             seller: "Seller 4",
-            category: "Dorm",
+            category: "Dorm"
         },
         {
             id: 14,
@@ -160,7 +160,7 @@
     ];
 
     // REVISE & ADD BACKEND: Adjust this based on number of products in database
-    let itemsPerPage = 4;
+    let itemsPerPage = 2;
 
     let currentPage = 1;
     const totalPages = Math.ceil(products.length / itemsPerPage);
@@ -197,75 +197,30 @@
 
     <!--- pagination logic -->
     <div class="mt-6 flex justify-center">
-        <Pagination.Root
-            count={totalPages}
-            perPage={1}
-            on:change={e => handlePageChange(e.detail)}>
-            <Pagination.Content>
-                <Pagination.PrevButton>
-                    <ChevronLeft class="size-4" />
-                    <span class="hidden sm:block">Previous</span>
-                </Pagination.PrevButton>
-                {#if totalPages <= 3}
-                    {#each Array(totalPages)
-                        .fill(0)
-                        .map( (_, index) => ({ value: index + 1 }) ) as page (page.value)}
-                        <Pagination.Item>
-                            <Pagination.Link
-                                page={page.value}
-                                isActive={currentPage === page.value}>
-                                {page.value}
-                            </Pagination.Link>
-                        </Pagination.Item>
-                    {/each}
-                {:else}
-                    {#if currentPage > 2}
-                         <Pagination.Item>
-                            <Pagination.Link
-                                page={1}>
-                            </Pagination.Link>
-                            1
-                        </Pagination.Item>
-                        {#if currentPage > 3}
-                             <Pagination.Item>
-                                <span>...</span>
-                            </Pagination.Item>
-                        {/if}
+        <Pagination.Root count={products.length} perPage={itemsPerPage}>
+            {#snippet children({ pages, currentPage })}
+                <Pagination.Content>
+                <Pagination.Item>
+                    <Pagination.PrevButton />
+                </Pagination.Item>
+                {#each pages as page (page.key)}
+                    {#if page.type === "ellipsis"}
+                    <Pagination.Item>
+                        <Pagination.Ellipsis />
+                    </Pagination.Item>
+                    {:else}
+                    <Pagination.Item isVisible={currentPage === page.value}>
+                        <Pagination.Link {page} isActive={currentPage === page.value}>
+                        {page.value}
+                        </Pagination.Link>
+                    </Pagination.Item>
                     {/if}
-
-                    {#each [
-                        Math.max(1, currentPage - 1),
-                        currentPage,
-                        Math.min(totalPages, currentPage + 1)
-                    ] as page}
-                        {#if page > 0 && page <= totalPages}
-                            <Pagination.Item>
-                                <Pagination.Link
-                                    page={page}
-                                    isActive={currentPage === page}>
-                                    {page}
-                                </Pagination.Link>
-                            </Pagination.Item>
-                        {/if}
-                    {/each}
-                    
-                    {#if currentPage < totalPages - 1}
-                        {#if currentPage < totalPages - 2}
-                            <Pagination.Item>
-                                <span>...</span>
-                            </Pagination.Item>
-                        {/if}
-                        <Pagination.Item>
-                            <Pagination.Link page={totalPages}>{totalPages}</Pagination.Link>
-                        </Pagination.Item>
-                    {/if}
-                {/if}
-
-                <Pagination.NextButton>
-                    <span class="hidden sm:block">Next</span>
-                    <ChevronRight class="size-4" />
-                </Pagination.NextButton>
-            </Pagination.Content>
+                {/each}
+                <Pagination.Item>
+                    <Pagination.NextButton />
+                </Pagination.Item>
+                </Pagination.Content>
+            {/snippet}
         </Pagination.Root>
     </div>
 </ScrollArea>
