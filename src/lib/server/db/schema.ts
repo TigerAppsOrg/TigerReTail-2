@@ -9,6 +9,7 @@ import {
     boolean
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { z } from "zod";
 
 // Each user has either a netid or a pwdAuth entry. If no netid but no pwdAuth, then user should be migrated.
 export const pwdAuth = pgTable("pwd_auth", {
@@ -29,6 +30,7 @@ export const pwdAuthRelations = relations(pwdAuth, ({ one }) => ({
 
 export const affiliationEnum = pgEnum("affiliation", ["ias", "princeton"]);
 export type Affiliation = (typeof affiliationEnum.enumValues)[number];
+export const ZodAffiliation = z.enum(affiliationEnum.enumValues);
 
 export const user = pgTable("user", {
     id: serial("id").primaryKey(),
@@ -50,6 +52,7 @@ export const qualityEnum = pgEnum("quality", [
     "poor"
 ]);
 export type Quality = (typeof qualityEnum.enumValues)[number];
+export const ZodQuality = z.enum(qualityEnum.enumValues);
 
 export const statusEnum = pgEnum("status", [
     "active",
@@ -58,9 +61,11 @@ export const statusEnum = pgEnum("status", [
     "expired"
 ]);
 export type Status = (typeof statusEnum.enumValues)[number];
+export const ZodStatus = z.enum(statusEnum.enumValues);
 
 export const itemTypesEnum = pgEnum("item_type", ["sell", "rent"]);
 export type ItemType = (typeof itemTypesEnum.enumValues)[number];
+export const ZodItemType = z.enum(itemTypesEnum.enumValues);
 
 export const categoriesEnum = pgEnum("category", [
     "accessories",
@@ -79,6 +84,7 @@ export const categoriesEnum = pgEnum("category", [
     "transportation"
 ]);
 export type Category = (typeof categoriesEnum.enumValues)[number];
+export const ZodCategory = z.enum(categoriesEnum.enumValues);
 
 export const userRelations = relations(user, ({ many }) => ({
     items: many(items),
