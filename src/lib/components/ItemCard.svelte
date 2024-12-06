@@ -7,6 +7,7 @@
     export let itemDescription;
     export let price;
     export let seller; 
+    export let category;
 </script>
 
 <Card.Root>
@@ -15,9 +16,10 @@
     <Separator class="my-15"/>
     <Card.Title>{itemName}</Card.Title>
     <Card.Description>{itemDescription}</Card.Description>
+    <Card.Description>{category}</Card.Description>
   </Card.Header>
   <Card.Content>
-    <p>{price}</p>
+    <p>${price}</p>
   </Card.Content>
   <Card.Footer>
     <p>{seller}</p>
