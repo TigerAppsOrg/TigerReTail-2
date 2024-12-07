@@ -114,7 +114,7 @@ export const items = pgTable(
             "gin",
             sql`(
                 setweight(to_tsvector('english', ${table.name}), 'A') ||
-                setweight(to_tsvector('english', coalesce(${table.description}, '')), 'B'
+                setweight(to_tsvector('english', coalesce(${table.description}, '')), 'B')
             )`
         )
     })
