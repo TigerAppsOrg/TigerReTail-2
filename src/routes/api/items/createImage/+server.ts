@@ -3,6 +3,9 @@ import type { RequestHandler } from "@sveltejs/kit";
 import { z } from "zod";
 import { db } from "$lib/server/db";
 import { itemImages } from "$lib/server/db/schema";
+import s3Client from "$lib/server/aws/s3";
+import { env } from "$env/dynamic/private";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 const schema = z.object({
     item_id: z.number(),
@@ -22,7 +25,9 @@ export const POST: RequestHandler = async ({ locals, request }) => {
         });
     }
     const { item_id, file } = data.data;
-    if (!file.type.startsWith("image/")) {
+    const validTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    if (!validTypes.includes(file.type)) {
         return new Response(JSON.stringify({ error: "INVALID_FILE_TYPE" }), {
             status: 400,
             headers: {
@@ -31,35 +36,51 @@ export const POST: RequestHandler = async ({ locals, request }) => {
         });
     }
 
-    const url = "images/";
+    const uuid = crypto.randomUUID();
+    const url = "images/" + "trt2_" + uuid + "." + file.type.split("/")[1];
+    // TODO: maybe compress image (with sharp?)
 
     // convert below to transaction
-    const imageID = await db.transaction(async (tx) => {
-        const image = await tx
-            .insert(itemImages)
-            .values({
-                item_id,
-                url
-            })
-            .returning({ id: itemImages.id })
-            .execute();
-        if (image.length === 0) {
+    const imageID = await db
+        .transaction(async (tx) => {
+            const image = await tx
+                .insert(itemImages)
+                .values({
+                    item_id,
+                    url
+                })
+                .returning({ id: itemImages.id })
+                .execute();
+            if (image.length === 0) {
+                return new Response(
+                    JSON.stringify({ error: "CREATION_ERROR" }),
+                    {
+                        status: 500,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
+
+            const params = {
+                Bucket: env.AWS_STORAGE_BUCKET_NAME!,
+                Key: url,
+                Body: file.stream()
+            };
+            const command = new PutObjectCommand(params);
+            await s3Client.send(command);
+            return image[0].id;
+        })
+        .catch((e) => {
+            console.error(e);
             return new Response(JSON.stringify({ error: "CREATION_ERROR" }), {
                 status: 500,
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-        }
-
-        // TODO: upload image to cloud storage
-
-        return image[0].id;
-    });
-
-    if (imageID instanceof Response) {
-        return imageID;
-    }
+        });
 
     return new Response(JSON.stringify({ url, id: imageID }), {
         status: 200,

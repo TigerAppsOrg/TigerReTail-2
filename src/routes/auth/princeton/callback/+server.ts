@@ -33,14 +33,29 @@ export const GET: RequestHandler = async (req: RequestEvent) => {
         });
     }
 
-    const existingUser = getUserByNetID(userInfo.netid);
+    let existingUser;
+    try {
+        existingUser = await getUserByNetID(userInfo.netid!);
+    } catch (e) {
+        console.error("Error getting user:", e);
+        return new Response("Error getting user", {
+            status: 500
+        });
+    }
     if (!existingUser) {
-        const id = await createUser(
-            userInfo.netid!,
-            userInfo.name,
-            userInfo.mail
-        );
-        userInfo.id = id;
+        try {
+            const id = await createUser(
+                userInfo.netid!,
+                userInfo.name,
+                userInfo.mail
+            );
+            userInfo.id = id;
+        } catch (e) {
+            console.error("Error creating user:", e);
+            return new Response("Error creating user", {
+                status: 500
+            });
+        }
     }
 
     await req.locals.session.set(userInfo);

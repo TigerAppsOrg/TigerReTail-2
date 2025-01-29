@@ -6,9 +6,10 @@ import {
     pgEnum,
     timestamp,
     numeric,
-    boolean
+    boolean,
+    index
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { z } from "zod";
 
 // Each user has either a netid or a pwdAuth entry. If no netid but no pwdAuth, then user should be migrated.
@@ -91,21 +92,33 @@ export const userRelations = relations(user, ({ many }) => ({
     requests: many(requests)
 }));
 
-export const items = pgTable("items", {
-    id: serial("id").primaryKey(),
-    user_id: integer("user_id")
-        .notNull()
-        .references(() => user.id, {}),
-    time_posted: timestamp("time_posted").notNull(),
-    time_expire: timestamp("time_expire").notNull(),
-    name: text("name").notNull(),
-    price: numeric("price").notNull(),
-    quality: qualityEnum("quality"),
-    description: text("description"),
-    status: statusEnum("status").notNull(),
-    item_type: itemTypesEnum("item_type").notNull(),
-    legacy_id: integer("legacy_id").unique()
-});
+export const items = pgTable(
+    "items",
+    {
+        id: serial("id").primaryKey(),
+        user_id: integer("user_id")
+            .notNull()
+            .references(() => user.id, {}),
+        time_posted: timestamp("time_posted").notNull(),
+        time_expire: timestamp("time_expire").notNull(),
+        name: text("name").notNull(),
+        price: numeric("price").notNull(),
+        quality: qualityEnum("quality"),
+        description: text("description"),
+        status: statusEnum("status").notNull(),
+        item_type: itemTypesEnum("item_type").notNull(),
+        legacy_id: integer("legacy_id").unique()
+    },
+    table => ({
+        searchIndex: index("search_index").using(
+            "gin",
+            sql`(
+                setweight(to_tsvector('english', ${table.name}), 'A') ||
+                setweight(to_tsvector('english', coalesce(${table.description}, '')), 'B')
+            )`
+        )
+    })
+);
 
 export const itemsRelations = relations(items, ({ one, many }) => ({
     user: one(user, {
