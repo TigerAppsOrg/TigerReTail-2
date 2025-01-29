@@ -34,7 +34,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     const { name, price, quality, description, item_type, categories } =
         data.data;
 
-    const itemID = await db.transaction(async tx => {
+    const itemID = await db.transaction(async (tx) => {
         const item = await tx
             .insert(items)
             .values({
@@ -61,7 +61,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 
         // insert categories
         if (categories) {
-            const values = categories.map(category => ({
+            const values = categories.map((category) => ({
                 item_id: item[0].id,
                 category
             }));

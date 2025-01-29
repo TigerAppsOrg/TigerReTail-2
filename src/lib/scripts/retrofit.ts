@@ -12,6 +12,6 @@ const retrofit = async (path: string) => {
     return response.json();
 };
 
-retrofit("/dev/retrofit").then(response => {
+retrofit("/dev/retrofit").then((response) => {
     console.log(response);
 });

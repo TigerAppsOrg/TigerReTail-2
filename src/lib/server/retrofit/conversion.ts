@@ -30,7 +30,7 @@ export const convertUsers = async (oldDB: Kysely<DB>) => {
         .selectAll()
         .execute();
 
-    const newUsers = users.map(user => {
+    const newUsers = users.map((user) => {
         const [username, affiliation] = getUsernameAndAffiliation(
             user.username
         );

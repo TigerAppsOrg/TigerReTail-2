@@ -6,7 +6,7 @@ import { itemImages } from "$lib/server/db/schema";
 
 const schema = z.object({
     item_id: z.number(),
-    file: z.custom<File>(file => file instanceof File)
+    file: z.custom<File>((file) => file instanceof File)
 });
 
 export const POST: RequestHandler = async ({ locals, request }) => {
@@ -34,7 +34,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     const url = "images/";
 
     // convert below to transaction
-    const imageID = await db.transaction(async tx => {
+    const imageID = await db.transaction(async (tx) => {
         const image = await tx
             .insert(itemImages)
             .values({
