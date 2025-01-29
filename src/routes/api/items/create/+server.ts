@@ -34,9 +34,8 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     const { name, price, quality, description, item_type, categories } =
         data.data;
 
-    let itemID: number;
-    try {
-        itemID = await db.transaction(async tx => {
+    const itemID = await db
+        .transaction(async (tx) => {
             const item = await tx
                 .insert(items)
                 .values({
@@ -52,27 +51,54 @@ export const POST: RequestHandler = async ({ locals, request }) => {
                 })
                 .returning({ id: items.id })
                 .execute();
+            if (item.length === 0) {
+                return new Response(
+                    JSON.stringify({ error: "CREATION_ERROR" }),
+                    {
+                        status: 500,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
 
             // insert categories
             if (categories) {
-                const values = categories.map(category => ({
+                const values = categories.map((category) => ({
                     item_id: item[0].id,
                     category
                 }));
-                await tx.insert(itemCategories).values(values).execute();
+
+                const success = await tx
+                    .insert(itemCategories)
+                    .values(values)
+                    .returning({ id: itemCategories.id })
+                    .execute();
+                if (success.length !== values.length) {
+                    return new Response(
+                        JSON.stringify({ error: "CREATION_ERROR" }),
+                        {
+                            status: 500,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+                }
             }
 
             return item[0].id;
+        })
+        .catch((e) => {
+            console.error(e);
+            return new Response(JSON.stringify({ error: "DATABASE_ERROR" }), {
+                status: 500,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
         });
-    } catch (e) {
-        console.error("Error creating item:", e);
-        return new Response(JSON.stringify({ error: "CREATION_ERROR" }), {
-            status: 500,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
 
     return new Response(JSON.stringify({ id: itemID }), {
         status: 200,

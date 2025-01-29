@@ -9,7 +9,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 const schema = z.object({
     item_id: z.number(),
-    file: z.custom<File>(file => file instanceof File)
+    file: z.custom<File>((file) => file instanceof File)
 });
 
 export const POST: RequestHandler = async ({ locals, request }) => {
@@ -40,9 +40,9 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     const url = "images/" + "trt2_" + uuid + "." + file.type.split("/")[1];
     // TODO: maybe compress image (with sharp?)
 
-    let imageID: number;
-    try {
-        imageID = await db.transaction(async tx => {
+    // convert below to transaction
+    const imageID = await db
+        .transaction(async (tx) => {
             const image = await tx
                 .insert(itemImages)
                 .values({
@@ -51,6 +51,17 @@ export const POST: RequestHandler = async ({ locals, request }) => {
                 })
                 .returning({ id: itemImages.id })
                 .execute();
+            if (image.length === 0) {
+                return new Response(
+                    JSON.stringify({ error: "CREATION_ERROR" }),
+                    {
+                        status: 500,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
 
             const params = {
                 Bucket: env.AWS_STORAGE_BUCKET_NAME!,
@@ -60,16 +71,16 @@ export const POST: RequestHandler = async ({ locals, request }) => {
             const command = new PutObjectCommand(params);
             await s3Client.send(command);
             return image[0].id;
+        })
+        .catch((e) => {
+            console.error(e);
+            return new Response(JSON.stringify({ error: "CREATION_ERROR" }), {
+                status: 500,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
         });
-    } catch (e) {
-        console.error(e);
-        return new Response(JSON.stringify({ error: "CREATION_ERROR" }), {
-            status: 500,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-    }
 
     return new Response(JSON.stringify({ url, id: imageID }), {
         status: 200,

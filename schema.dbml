@@ -44,12 +44,13 @@ table item_categories {
   id serial [pk, not null, increment]
   item_id integer [not null]
   category category [not null]
+  legacy_id integer [unique]
 }
 
 table item_images {
   id serial [pk, not null, increment]
   item_id integer [not null]
-  url text [not null]
+  url text [not null, unique]
 }
 
 table items {
@@ -77,6 +78,7 @@ table request_categories {
   id serial [pk, not null, increment]
   request_id integer [not null]
   category category [not null]
+  legacy_id integer [unique]
 }
 
 table request_images {
@@ -93,6 +95,7 @@ table requests {
   name text [not null]
   price numeric [not null]
   description text
+  legacy_id integer [unique]
 }
 
 table user {
