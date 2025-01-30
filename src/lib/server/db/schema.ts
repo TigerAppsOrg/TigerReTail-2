@@ -109,7 +109,7 @@ export const items = pgTable(
         item_type: itemTypesEnum("item_type").notNull(),
         legacy_id: integer("legacy_id").unique()
     },
-    table => ({
+    (table) => ({
         searchIndex: index("search_index").using(
             "gin",
             sql`(

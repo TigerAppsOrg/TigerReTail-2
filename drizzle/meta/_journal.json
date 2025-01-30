@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1733186728521,
-      "tag": "0000_careful_radioactive_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1733188795320,
-      "tag": "0001_minor_darkstar",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1733191142268,
-      "tag": "0002_huge_vision",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1733547659927,
-      "tag": "0003_remarkable_black_panther",
+      "when": 1738201170210,
+      "tag": "0000_lumpy_the_watchers",
       "breakpoints": true
     }
   ]

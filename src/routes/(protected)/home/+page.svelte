@@ -5,7 +5,7 @@
 
     let { data } = $props();
 
-    console.log(data.props.items);
+    // console.log(data.props.items);
 </script>
 
 <div class="flex h-screen flex-col overflow-hidden bg-green-200">

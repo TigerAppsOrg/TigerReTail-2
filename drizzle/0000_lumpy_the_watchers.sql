@@ -28,10 +28,19 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "item_categories" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"item_id" integer NOT NULL,
+	"category" "category" NOT NULL,
+	"legacy_id" integer,
+	CONSTRAINT "item_categories_legacy_id_unique" UNIQUE("legacy_id")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "item_images" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"item_id" integer NOT NULL,
-	"url" text NOT NULL
+	"url" text NOT NULL,
+	CONSTRAINT "item_images_url_unique" UNIQUE("url")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "items" (
@@ -45,7 +54,6 @@ CREATE TABLE IF NOT EXISTS "items" (
 	"description" text,
 	"status" "status" NOT NULL,
 	"item_type" "item_type" NOT NULL,
-	"category" "category" NOT NULL,
 	"legacy_id" integer,
 	CONSTRAINT "items_legacy_id_unique" UNIQUE("legacy_id")
 );
@@ -55,6 +63,14 @@ CREATE TABLE IF NOT EXISTS "pwd_auth" (
 	"password" text NOT NULL,
 	"user_id" integer NOT NULL,
 	"verified" boolean NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "request_categories" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"request_id" integer NOT NULL,
+	"category" "category" NOT NULL,
+	"legacy_id" integer,
+	CONSTRAINT "request_categories_legacy_id_unique" UNIQUE("legacy_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "request_images" (
@@ -71,7 +87,8 @@ CREATE TABLE IF NOT EXISTS "requests" (
 	"name" text NOT NULL,
 	"price" numeric NOT NULL,
 	"description" text,
-	"category" "category" NOT NULL
+	"legacy_id" integer,
+	CONSTRAINT "requests_legacy_id_unique" UNIQUE("legacy_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
@@ -85,6 +102,12 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"legacy_id" integer,
 	CONSTRAINT "user_legacy_id_unique" UNIQUE("legacy_id")
 );
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "item_categories" ADD CONSTRAINT "item_categories_item_id_items_id_fk" FOREIGN KEY ("item_id") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "item_images" ADD CONSTRAINT "item_images_item_id_items_id_fk" FOREIGN KEY ("item_id") REFERENCES "public"."items"("id") ON DELETE no action ON UPDATE no action;
@@ -105,6 +128,12 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "request_categories" ADD CONSTRAINT "request_categories_request_id_requests_id_fk" FOREIGN KEY ("request_id") REFERENCES "public"."requests"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "request_images" ADD CONSTRAINT "request_images_request_id_requests_id_fk" FOREIGN KEY ("request_id") REFERENCES "public"."requests"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -115,3 +144,8 @@ DO $$ BEGIN
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "search_index" ON "items" USING gin ((
+                setweight(to_tsvector('english', "name"), 'A') ||
+                setweight(to_tsvector('english', coalesce("description", '')), 'B')
+            ));

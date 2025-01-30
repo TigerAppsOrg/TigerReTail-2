@@ -1,9 +1,66 @@
 {
-  "id": "6a334817-81a8-451f-b7b3-11bfd47b3f7b",
+  "id": "da0471f6-903d-43e1-98fb-78db2b5f0d22",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.item_categories": {
+      "name": "item_categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "item_id": {
+          "name": "item_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "category",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "legacy_id": {
+          "name": "legacy_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "item_categories_item_id_items_id_fk": {
+          "name": "item_categories_item_id_items_id_fk",
+          "tableFrom": "item_categories",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "item_categories_legacy_id_unique": {
+          "name": "item_categories_legacy_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "legacy_id"
+          ]
+        }
+      }
+    },
     "public.item_images": {
       "name": "item_images",
       "schema": "",
@@ -44,7 +101,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "item_images_url_unique": {
+          "name": "item_images_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "url"
+          ]
+        }
+      }
     },
     "public.items": {
       "name": "items",
@@ -113,13 +178,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "category": {
-          "name": "category",
-          "type": "category",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
         "legacy_id": {
           "name": "legacy_id",
           "type": "integer",
@@ -127,7 +185,23 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "search_index": {
+          "name": "search_index",
+          "columns": [
+            {
+              "expression": "(\n                setweight(to_tsvector('english', \"name\"), 'A') ||\n                setweight(to_tsvector('english', coalesce(\"description\", '')), 'B')\n            )",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "items_user_id_user_id_fk": {
           "name": "items_user_id_user_id_fk",
@@ -201,6 +275,63 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.request_categories": {
+      "name": "request_categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "request_id": {
+          "name": "request_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "category",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "legacy_id": {
+          "name": "legacy_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "request_categories_request_id_requests_id_fk": {
+          "name": "request_categories_request_id_requests_id_fk",
+          "tableFrom": "request_categories",
+          "tableTo": "requests",
+          "columnsFrom": [
+            "request_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "request_categories_legacy_id_unique": {
+          "name": "request_categories_legacy_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "legacy_id"
+          ]
+        }
+      }
     },
     "public.request_images": {
       "name": "request_images",
@@ -290,12 +421,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "category": {
-          "name": "category",
-          "type": "category",
-          "typeSchema": "public",
+        "legacy_id": {
+          "name": "legacy_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
@@ -315,7 +445,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "requests_legacy_id_unique": {
+          "name": "requests_legacy_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "legacy_id"
+          ]
+        }
+      }
     },
     "public.user": {
       "name": "user",

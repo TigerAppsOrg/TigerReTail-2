@@ -7,7 +7,7 @@
  * originally by Alex Halderman, Scott Karlin, Brian Kernighan, and Bob Dondero.
  */
 
-import { redirect, type RequestEvent } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 import type { SessionData } from "../../../app";
 
 export class CASClient {
