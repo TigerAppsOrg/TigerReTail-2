@@ -4,8 +4,10 @@
 </script>
 
 <div class="flex min-h-screen flex-col">
+    <div id="pattern" class="absolute inset-0 z-0"></div>
+
     <header
-        class="grid h-14 w-full grid-cols-2 items-center px-4 md:grid-cols-3">
+        class="z-10 grid h-14 w-full grid-cols-2 items-center px-4 md:grid-cols-3">
         <div class="flex cursor-pointer items-center text-2xl">
             <img src="/logo.png" alt="TigerReTail logo" class="h-10" />
             <h1 class="font-semibold tracking-tighter">TigerReTail</h1>
@@ -19,7 +21,7 @@
         </div>
     </header>
 
-    <main></main>
+    <main class="z-10"></main>
 
     <section id="features"></section>
 
@@ -30,6 +32,10 @@
 </div>
 
 <style lang="postcss">
+    section {
+        @apply z-10;
+    }
+
     .nav-link {
         position: relative;
         text-decoration: none;
@@ -51,5 +57,17 @@
     .nav-link:hover::after {
         transform: scaleX(1);
         transform-origin: bottom left;
+    }
+
+    #pattern {
+        background-image: url("/grid.svg");
+        background-repeat: repeat;
+        background-size: 60px 60px;
+        mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.3), black 30%);
+        -webkit-mask-image: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.3),
+            black 30%
+        );
     }
 </style>

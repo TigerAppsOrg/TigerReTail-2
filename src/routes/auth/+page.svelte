@@ -1,7 +1,6 @@
 <script>
     import Footer from "$lib/components/Footer.svelte";
     import { Button } from "$lib/components/ui/button";
-    import GithubIcon from "$lib/icons/GithubIcon.svelte";
 </script>
 
 <div class="relative flex min-h-screen flex-col bg-gray-50">
@@ -47,7 +46,7 @@
 
 <style>
     #pattern {
-        background-image: url("/pattern.svg");
+        background-image: url("/dots.svg");
         background-repeat: repeat;
         background-size: 60px 60px;
         mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.3), black 30%);
