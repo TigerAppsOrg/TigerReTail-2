@@ -42,8 +42,11 @@
                         >Settings</DropdownMenuItem>
                     <DropdownMenuItem onclick={() => goto("/profile")}
                         >My Profile</DropdownMenuItem>
-                    <DropdownMenuItem onclick={() => {}}
-                        >Logout</DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <form method="POST" action="/home?/logout">
+                            <button type="submit"> Logout </button>
+                        </form>
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>

@@ -23,7 +23,7 @@ export const createUser = async (
     name: string,
     email: string
 ) => {
-    let user = await db
+    const user = await db
         .insert(schema.user)
         .values({
             name,
