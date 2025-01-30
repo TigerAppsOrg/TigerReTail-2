@@ -3,7 +3,7 @@
 </script>
 
 <footer
-    class="flex w-full items-center justify-center gap-4 p-2 text-xs text-gray-500">
+    class="flex w-full items-center justify-center gap-4 p-4 text-xs text-gray-500">
     <p>
         &copy; 2025 <a
             href="https://tigerapps.org"

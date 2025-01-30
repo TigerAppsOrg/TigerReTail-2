@@ -5,9 +5,9 @@
 
 <div class="flex min-h-screen flex-col">
     <header
-        class="grid h-12 w-full grid-cols-2 items-center px-4 md:grid-cols-3">
-        <div class="flex cursor-pointer items-center text-lg">
-            <img src="/logo.png" alt="TigerReTail logo" class="h-8" />
+        class="grid h-14 w-full grid-cols-2 items-center px-4 md:grid-cols-3">
+        <div class="flex cursor-pointer items-center text-2xl">
+            <img src="/logo.png" alt="TigerReTail logo" class="h-10" />
             <h1 class="font-semibold tracking-tighter">TigerReTail</h1>
         </div>
         <div class="hidden gap-8 justify-self-center md:flex">
