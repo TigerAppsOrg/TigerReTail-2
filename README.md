@@ -1,4 +1,4 @@
-# TigerReTail 2 🐯
+# TigerReTail 2 🛍️
 
 Princeton's modern marketplace - where Tigers buy, sell, and connect.
 
