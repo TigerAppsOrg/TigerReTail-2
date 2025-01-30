@@ -43,12 +43,13 @@
         class="z-10 flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center px-4 text-center">
         <h2
             class="mb-4 text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
-            The Future of <span class="text-primary">Retail</span> Management
+            Princeton's Modern <span class="text-primary">Marketplace</span>
         </h2>
 
         <p class="mb-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-            Streamline your retail operations with powerful inventory
-            management, real-time analytics, and seamless POS integration.
+            Buy, sell, and trade with the Princeton community. From textbooks to
+            furniture, club merchandise to event tickets — all in one trusted
+            campus marketplace.
         </p>
 
         <Button href="/auth" size="lg" class="text-lg">Get Started</Button>
