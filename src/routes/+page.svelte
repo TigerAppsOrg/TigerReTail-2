@@ -7,9 +7,9 @@
     <div id="pattern" class="absolute inset-0 z-0"></div>
 
     <header
-        class="z-10 grid h-14 w-full grid-cols-2 items-center px-4 md:grid-cols-3">
+        class="fixed grid h-14 w-full grid-cols-2 items-center px-4 transition-all duration-200 md:grid-cols-3">
         <button
-            class="flex w-fit cursor-pointer items-center text-2xl"
+            class="z-50 flex w-fit cursor-pointer items-center text-2xl"
             onclick={() => {
                 document.getElementById("home")!.scrollIntoView({
                     behavior: "smooth"
@@ -18,7 +18,7 @@
             <img src="/logo.png" alt="TigerReTail logo" class="h-10" />
             <h1 class="font-semibold tracking-tighter">TigerReTail</h1>
         </button>
-        <div class="hidden gap-8 justify-self-center md:flex">
+        <div class="z-50 hidden gap-8 justify-self-center md:flex">
             <button
                 onclick={() => {
                     document.getElementById("features")!.scrollIntoView({
@@ -34,14 +34,27 @@
                 }}
                 class="nav-link">About</button>
         </div>
-        <div class="justify-self-end">
+        <div class="z-50 justify-self-end">
             <Button href="/auth">Sign in</Button>
         </div>
     </header>
 
-    <main class="z-10"></main>
+    <main
+        class="z-10 flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center px-4 text-center">
+        <h2
+            class="mb-4 text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
+            The Future of <span class="text-primary">Retail</span> Management
+        </h2>
 
-    <section id="features"></section>
+        <p class="mb-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
+            Streamline your retail operations with powerful inventory
+            management, real-time analytics, and seamless POS integration.
+        </p>
+
+        <Button href="/auth" size="lg" class="text-lg">Get Started</Button>
+    </main>
+
+    <section id="features" class="h-screen"></section>
 
     <section id="about"></section>
 
@@ -50,6 +63,23 @@
 </div>
 
 <style lang="postcss">
+    header {
+        background-color: transparent;
+        view-timeline-name: --scroll;
+        animation: header-scroll linear forwards;
+        animation-timeline: scroll();
+        animation-range: 0 100px;
+        z-index: 20;
+    }
+
+    @keyframes header-scroll {
+        to {
+            background-color: hsl(var(--background));
+            border-bottom: 1px solid hsl(var(--border));
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+    }
+
     section {
         @apply z-10;
     }
