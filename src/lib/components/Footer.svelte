@@ -14,7 +14,7 @@
     <a
         href="https://github.com/TigerAppsOrg/SakuyaSQL"
         target="_blank"
-        class="text-gray-text transition-colors hover:text-primary">
+        class="transition-colors hover:text-primary">
         <GithubIcon />
     </a>
 </footer>

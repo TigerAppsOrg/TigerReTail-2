@@ -75,3 +75,11 @@ body {
         @apply bg-background text-foreground;
     }
 }
+
+.dots-bg {
+    background-image: url("/dots.svg");
+    background-repeat: repeat;
+    background-size: 60px 60px;
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.3), black 30%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.3), black 30%);
+}
