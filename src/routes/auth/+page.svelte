@@ -7,7 +7,7 @@
     <div id="pattern" class="absolute inset-0 z-0"></div>
 
     <header
-        class="relative z-10 grid h-12 w-full grid-cols-2 items-center px-8 pt-6 md:grid-cols-3">
+        class="relative z-10 grid h-16 w-full grid-cols-2 items-center px-8 pt-6 md:grid-cols-3">
         <a href="/" class="flex w-fit cursor-pointer items-center text-2xl">
             <img src="/logo.png" alt="TigerReTail logo" class="h-10" />
             <h1 class="font-semibold tracking-tighter">TigerReTail</h1>
