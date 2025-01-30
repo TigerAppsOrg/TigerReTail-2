@@ -68,7 +68,7 @@ If you would like to contribute to the project, please reach out to the TigerApp
 
 ## Credits
 
-`TigerReTail 2` was created by TigerApps team members Ben Aepli '28, Glen Nfor '27, Angelina Ji '27, Winsice Ng '26, Marvin Chen '26, and Erica Lee '26, and Joshua Lau '26.
+`TigerReTail 2` was created by TigerApps team members Ben Aepli '28, Glen Nfor '27, Angelina Ji '27, Winsice Ng '26, Marvin Chen '26, Erica Lee '26, and Joshua Lau '26.
 
 The [original TigerReTail project](https://github.com/TigerAppsOrg/TigerReTail) was developed by Albert Lin '23, Katie McLaughlin '23, Sara Schwartz '23, and Phoebe Lin '23.
 
