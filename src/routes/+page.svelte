@@ -5,11 +5,13 @@
 
 <div class="flex min-h-screen flex-col">
     <header class="grid h-12 w-full grid-cols-3 items-center px-4">
-        <div>
-            <h1>TigerReTail</h1>
+        <div class="flex cursor-pointer items-center text-lg">
+            <img src="/logo.png" alt="TigerReTail logo" class="h-8" />
+            <h1 class="font-semibold tracking-tighter">TigerReTail</h1>
         </div>
-        <div class="justify-self-center">
+        <div class="flex gap-8 justify-self-center">
             <a href="#features" class="nav-link">Features</a>
+            <a href="#about" class="nav-link">About</a>
         </div>
         <div class="justify-self-end">
             <Button href="/auth">Sign in</Button>
