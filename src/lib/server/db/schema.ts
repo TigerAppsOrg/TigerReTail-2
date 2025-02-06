@@ -1,14 +1,16 @@
 import {
+    boolean,
+    index,
+    integer,
+    numeric,
+    pgEnum,
     pgTable,
     serial,
     text,
-    integer,
-    pgEnum,
-    timestamp,
-    numeric,
-    boolean,
-    index
+    timestamp
 } from "drizzle-orm/pg-core";
+
+import { AFFILIATIONS, CATEGORIES, QUALITIES, STATUSES } from "$lib";
 import { relations, sql } from "drizzle-orm";
 import { z } from "zod";
 
@@ -29,7 +31,7 @@ export const pwdAuthRelations = relations(pwdAuth, ({ one }) => ({
     })
 }));
 
-export const affiliationEnum = pgEnum("affiliation", ["ias", "princeton"]);
+export const affiliationEnum = pgEnum("affiliation", AFFILIATIONS);
 export type Affiliation = (typeof affiliationEnum.enumValues)[number];
 export const ZodAffiliation = z.enum(affiliationEnum.enumValues);
 
@@ -45,22 +47,11 @@ export const user = pgTable("user", {
     legacy_id: integer("legacy_id").unique()
 });
 
-export const qualityEnum = pgEnum("quality", [
-    "new",
-    "like new",
-    "good",
-    "fair",
-    "poor"
-]);
+export const qualityEnum = pgEnum("quality", QUALITIES);
 export type Quality = (typeof qualityEnum.enumValues)[number];
 export const ZodQuality = z.enum(qualityEnum.enumValues);
 
-export const statusEnum = pgEnum("status", [
-    "active",
-    "inactive",
-    "sold",
-    "expired"
-]);
+export const statusEnum = pgEnum("status", STATUSES);
 export type Status = (typeof statusEnum.enumValues)[number];
 export const ZodStatus = z.enum(statusEnum.enumValues);
 
@@ -68,22 +59,7 @@ export const itemTypesEnum = pgEnum("item_type", ["sell", "rent"]);
 export type ItemType = (typeof itemTypesEnum.enumValues)[number];
 export const ZodItemType = z.enum(itemTypesEnum.enumValues);
 
-export const categoriesEnum = pgEnum("category", [
-    "accessories",
-    "beauty supplies",
-    "clothing",
-    "dorm essentials",
-    "event tickets",
-    "food",
-    "furniture",
-    "housing",
-    "other",
-    "school supplies",
-    "services",
-    "tech",
-    "textbooks",
-    "transportation"
-]);
+export const categoriesEnum = pgEnum("category", CATEGORIES);
 export type Category = (typeof categoriesEnum.enumValues)[number];
 export const ZodCategory = z.enum(categoriesEnum.enumValues);
 
