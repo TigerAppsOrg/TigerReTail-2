@@ -1,3 +1,4 @@
+// Must be run in dev mode (bun run dev)
 const serverAddress = "http://localhost:5173";
 
 const retrofit = async (path: string) => {
