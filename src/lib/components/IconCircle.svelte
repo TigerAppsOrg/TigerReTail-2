@@ -132,8 +132,8 @@
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: -1;
-        pointer-events: none; /* Ensure it doesn't interfere with interactions */
-        overflow: visible; /* Allow icons to render outside the circle */
+        pointer-events: none;
+        overflow: visible;
     }
 
     .icon-wrapper {

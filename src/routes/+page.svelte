@@ -3,8 +3,9 @@
     import { Button } from "$lib/components/ui/button";
     import GithubIcon from "$lib/icons/GithubIcon.svelte";
     import IconCircle from "$lib/components/IconCircle.svelte";
+    import { GITHUB_LINK } from "$lib/constants";
 
-    let windowWidth: number = $state(window.innerWidth);
+    let windowWidth: number = $state(10000);
     let radius = $derived(
         windowWidth < 630 ? 200 : windowWidth < 1024 ? 300 : 400
     );
@@ -191,14 +192,16 @@
                         fill="none"
                         stroke="currentColor"
                         stroke-width="2">
-                        <path
-                            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-4-4h-2" />
                     </svg>
-                    <h3 class="mb-2 text-xl font-semibold">In-App Messaging</h3>
+                    <h3 class="mb-2 text-xl font-semibold">Service Profiles</h3>
                     <p class="text-muted-foreground">
-                        Chat directly with buyers and sellers within the app.
-                        Negotiate prices, arrange meetups, and keep all your
-                        marketplace conversations in one place.
+                        Create a professional profile to showcase your skills
+                        and services. Whether you're a photographer, tutor, or
+                        developer, connect with peers looking for your
+                        expertise.
                     </p>
                 </div>
 
@@ -211,16 +214,20 @@
                         fill="none"
                         stroke="currentColor"
                         stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-4-4h-2" />
+                        <path d="M12 2v4" />
+                        <path d="M12 18v4" />
+                        <path d="M4.93 4.93l2.83 2.83" />
+                        <path d="M16.24 16.24l2.83 2.83" />
+                        <path d="M2 12h4" />
+                        <path d="M18 12h4" />
+                        <path d="M4.93 19.07l2.83-2.83" />
+                        <path d="M16.24 7.76l2.83-2.83" />
                     </svg>
-                    <h3 class="mb-2 text-xl font-semibold">Service Profiles</h3>
+                    <h3 class="mb-2 text-xl font-semibold">...and more</h3>
                     <p class="text-muted-foreground">
-                        Create a professional profile to showcase your skills
-                        and services. Whether you're a photographer, tutor, or
-                        developer, connect with peers looking for your
-                        expertise.
+                        We're constantly evolving based on your needs. Share
+                        your feedback and suggestions to help shape future
+                        features and improvements.
                     </p>
                 </div>
             </div>
@@ -246,7 +253,7 @@
             </p>
             <div class="mt-8 flex justify-center gap-4">
                 <a
-                    href="https://github.com/TigerAppsOrg/TigerRetail-2"
+                    href={GITHUB_LINK}
                     target="_blank"
                     class="inline-flex items-center gap-2 rounded-lg border px-4 py-2 transition-colors hover:bg-primary hover:text-primary-foreground">
                     <GithubIcon />

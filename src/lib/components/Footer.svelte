@@ -1,4 +1,5 @@
 <script>
+    import { GITHUB_LINK } from "$lib/constants";
     import GithubIcon from "$lib/icons/GithubIcon.svelte";
 </script>
 
@@ -12,7 +13,7 @@
         >. All rights reserved.
     </p>
     <a
-        href="https://github.com/TigerAppsOrg/SakuyaSQL"
+        href={GITHUB_LINK}
         target="_blank"
         class="transition-colors hover:text-primary">
         <GithubIcon />
