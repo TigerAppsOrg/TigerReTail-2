@@ -2,7 +2,15 @@
     import Footer from "$lib/components/Footer.svelte";
     import { Button } from "$lib/components/ui/button";
     import GithubIcon from "$lib/icons/GithubIcon.svelte";
+    import IconCircle from "$lib/components/IconCircle.svelte";
+
+    let windowWidth: number = $state(window.innerWidth);
+    let radius = $derived(
+        windowWidth < 630 ? 200 : windowWidth < 1024 ? 300 : 400
+    );
 </script>
+
+<svelte:window bind:innerWidth={windowWidth} />
 
 <div class="flex min-h-screen flex-col" id="home">
     <div id="pattern" class="absolute inset-0 z-0"></div>
@@ -41,7 +49,9 @@
     </header>
 
     <main
-        class="z-10 flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center px-4 text-center">
+        class="relative z-10 flex min-h-[calc(100vh-3.5rem)] flex-col items-center justify-center overflow-hidden px-4
+        text-center">
+        <IconCircle {radius} />
         <h2
             class="mb-4 text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
             Princeton's Modern <span class="text-primary">Marketplace</span>
