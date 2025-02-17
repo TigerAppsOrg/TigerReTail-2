@@ -1,5 +1,22 @@
 import { EMAIL_WHITELIST, type Result } from "./constants";
 
+/**
+ * Validates user input for authentication and registration.
+ * Provides methods to validate emails, names, and passwords according to security requirements.
+ *
+ * All validation methods return a Result type indicating success/failure with associated data or errors.
+ *
+ * Can run on both client and server.
+ *
+ * @example
+ * const validator = new Validator();
+ *
+ * // Validate password
+ * const passwordResult = validator.isStrongPassword("Password123!");
+ * if (!passwordResult.ok) {
+ *   console.log(passwordResult.error); // Array of validation errors
+ * }
+ */
 export class Validator {
     MAX_NAME_LENGTH = 100;
     MIN_PASSWORD_LENGTH = 8;
