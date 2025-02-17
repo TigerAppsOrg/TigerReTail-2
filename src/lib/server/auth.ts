@@ -3,6 +3,7 @@ import { pwdAuth, user } from "./db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import type { SessionData } from "../../app";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { EMAIL_WHITELIST } from "$lib/constants";
 
 type AuthUser = {
     name: string;
@@ -29,7 +30,10 @@ export class AuthService {
 
     private isValidEmail(email: string): boolean {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email) && this.isIAS(email);
+        return (
+            emailRegex.test(email) &&
+            (this.isIAS(email) || EMAIL_WHITELIST.includes(email))
+        );
     }
 
     private isValidName(name: string): boolean {
