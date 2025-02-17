@@ -3,8 +3,8 @@ import { Validator } from "$lib/validate";
 import * as bcrypt from "bcrypt";
 import { and, eq, sql } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type { SessionData } from "../../app";
-import { pwdAuth, user } from "./db/schema";
+import type { SessionData } from "../../../app";
+import { pwdAuth, user } from "../db/schema";
 
 type AuthUser = {
     name: string;

@@ -1,5 +1,5 @@
 import { httpCodes } from "$lib/httpCodes";
-import { AuthService } from "$lib/server/auth";
+import { AuthService } from "$lib/server/security/auth";
 import { db } from "$lib/server/db";
 import { redirect, type Actions } from "@sveltejs/kit";
 

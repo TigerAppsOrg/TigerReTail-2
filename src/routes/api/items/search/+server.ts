@@ -1,5 +1,5 @@
 import { db } from "$lib/server/db";
-import { checkAuthentication } from "$lib/server/db/cas";
+import { checkAuthentication } from "$lib/server/security/cas";
 import { items as itemsTable } from "$lib/server/db/schema";
 import type { RequestHandler } from "@sveltejs/kit";
 import { eq, sql } from "drizzle-orm";
