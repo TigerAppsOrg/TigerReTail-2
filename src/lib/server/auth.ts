@@ -1,23 +1,26 @@
 import * as bcrypt from "bcrypt";
-import PEPPER_SECRET from "$env/static/private";
-import { db } from "./db";
 import { pwdAuth, user } from "./db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import type { SessionData } from "../../app";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 type AuthUser = {
     name: string;
     email: string;
     passwordHash: string;
-    passwordSalt: string;
 };
 
 /**
  * Password authentication service for IAS users.
  */
 export class AuthService {
+    private db: PostgresJsDatabase;
+
+    constructor(database: PostgresJsDatabase) {
+        this.db = database;
+    }
+
     private SALT_ROUNDS = 10;
-    private PEPPER = PEPPER_SECRET;
 
     private isIAS(email: string): boolean {
         const iasPattern = /@ias.edu$/;
@@ -67,7 +70,7 @@ export class AuthService {
             throw new Error("Password is not strong enough");
         }
 
-        const existingUser = await db
+        const existingUser = await this.db
             .select({
                 exists: sql<number>`1`
             })
@@ -78,29 +81,24 @@ export class AuthService {
             throw new Error("Email is already registered");
         }
 
-        const { hash, salt } = await this.hashPassword(password);
+        const hash = await this.hashPassword(password);
 
         return {
             name,
             email: email.toLowerCase(),
-            passwordHash: hash,
-            passwordSalt: salt
+            passwordHash: hash
         };
     }
 
     /**
      * Hash password with salt
      * @param password Input password
-     * @returns Hashed password and salt
+     * @returns Hashed password
      */
-    async hashPassword(
-        password: string
-    ): Promise<{ hash: string; salt: string }> {
+    async hashPassword(password: string): Promise<string> {
         const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
-        const pepperedPassword = password + this.PEPPER;
-        const hash = await bcrypt.hash(pepperedPassword, salt);
-
-        return { hash, salt };
+        const hash = await bcrypt.hash(password, salt);
+        return hash;
     }
 
     /**
@@ -110,8 +108,7 @@ export class AuthService {
      * @returns True if password matches hash
      */
     async verifyPassword(password: string, hash: string): Promise<boolean> {
-        const pepperedPassword = password + this.PEPPER;
-        return await bcrypt.compare(pepperedPassword, hash);
+        return await bcrypt.compare(password, hash);
     }
 
     /**
@@ -128,7 +125,7 @@ export class AuthService {
     ): Promise<SessionData> {
         const userData = await this.processRegData(name, email, password);
 
-        const newUser = await db
+        const newUser = await this.db
             .transaction(async (tx) => {
                 const [newUser] = await tx
                     .insert(user)
@@ -171,7 +168,7 @@ export class AuthService {
         // Error message is the same to prevent attackers from gaining information
         const ERR_MESSAGE = "Invalid email or password";
 
-        const existingUser = await db
+        const existingUser = await this.db
             .select({
                 id: user.id,
                 name: user.name,
