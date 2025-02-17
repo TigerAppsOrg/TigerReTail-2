@@ -43,7 +43,11 @@
                 </p>
             </div>
 
-            <form class="flex flex-col space-y-4">
+            <!-- Email/Password submission form -->
+            <form
+                class="flex flex-col space-y-4"
+                method="POST"
+                action="?/login">
                 <div class="flex flex-col space-y-2">
                     <label for="email" class="text-sm font-medium">Email</label>
                     <input
@@ -72,6 +76,7 @@
                     <span>Sign in</span>
                 </Button>
             </form>
+
             <div class="space-y-2 text-center text-sm">
                 <div>
                     <span class="text-gray-600">Don't have an account? </span>

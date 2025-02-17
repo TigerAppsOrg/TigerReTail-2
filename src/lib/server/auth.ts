@@ -3,7 +3,7 @@ import { pwdAuth, user } from "./db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import type { SessionData } from "../../app";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { EMAIL_WHITELIST } from "$lib/constants";
+import { EMAIL_WHITELIST, type Result } from "$lib/constants";
 
 type AuthUser = {
     name: string;
@@ -15,13 +15,14 @@ type AuthUser = {
  * Password authentication service for IAS users.
  */
 export class AuthService {
+    private readonly SALT_ROUNDS = 10;
     private db: PostgresJsDatabase;
 
     constructor(database: PostgresJsDatabase) {
         this.db = database;
     }
 
-    private SALT_ROUNDS = 10;
+    //------------------------------------------------------------------
 
     private isIAS(email: string): boolean {
         const iasPattern = /@ias.edu$/;
@@ -50,6 +51,21 @@ export class AuthService {
         );
     }
 
+    private async hashPassword(password: string): Promise<string> {
+        const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
+        const hash = await bcrypt.hash(password, salt);
+        return hash;
+    }
+
+    private async verifyPassword(
+        password: string,
+        hash: string
+    ): Promise<boolean> {
+        return await bcrypt.compare(password, hash);
+    }
+
+    //------------------------------------------------------------------
+
     /**
      * Validate registration data and hash password
      * @param name Input name
@@ -61,18 +77,15 @@ export class AuthService {
         name: string,
         email: string,
         password: string
-    ): Promise<AuthUser> {
-        if (!this.isValidEmail(email)) {
-            throw new Error("Email must be from @ias.edu");
-        }
+    ): Promise<Result<AuthUser, string>> {
+        if (!this.isValidEmail(email))
+            return { ok: false, error: "Invalid email" };
 
-        if (!this.isValidName(name)) {
-            throw new Error("Invalid name");
-        }
+        if (!this.isValidName(name))
+            return { ok: false, error: "Invalid name" };
 
-        if (!this.isStrongPassword(password)) {
-            throw new Error("Password is not strong enough");
-        }
+        if (!this.isStrongPassword(password))
+            return { ok: false, error: "Password is not strong enough" };
 
         const existingUser = await this.db
             .select({
@@ -82,37 +95,19 @@ export class AuthService {
             .where(eq(user.email, email.toLowerCase()))
             .limit(1);
         if (existingUser.length > 0) {
-            throw new Error("Email is already registered");
+            return { ok: false, error: "Email already in use" };
         }
 
         const hash = await this.hashPassword(password);
 
         return {
-            name,
-            email: email.toLowerCase(),
-            passwordHash: hash
+            ok: true,
+            data: {
+                name,
+                email: email.toLowerCase(),
+                passwordHash: hash
+            }
         };
-    }
-
-    /**
-     * Hash password with salt
-     * @param password Input password
-     * @returns Hashed password
-     */
-    async hashPassword(password: string): Promise<string> {
-        const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
-        const hash = await bcrypt.hash(password, salt);
-        return hash;
-    }
-
-    /**
-     * Verify password against hash
-     * @param password Plain text password
-     * @param hash Hashed password
-     * @returns True if password matches hash
-     */
-    async verifyPassword(password: string, hash: string): Promise<boolean> {
-        return await bcrypt.compare(password, hash);
     }
 
     /**
@@ -126,8 +121,10 @@ export class AuthService {
         name: string,
         email: string,
         password: string
-    ): Promise<SessionData> {
-        const userData = await this.processRegData(name, email, password);
+    ): Promise<Result<SessionData, string>> {
+        const userRes = await this.processRegData(name, email, password);
+        if (!userRes.ok) return { ok: false, error: userRes.error };
+        const userData = userRes.data;
 
         const newUser = await this.db
             .transaction(async (tx) => {
@@ -154,11 +151,14 @@ export class AuthService {
             });
 
         return {
-            name: userData.name,
-            mail: userData.email,
-            affiliation: "ias",
-            netid: null,
-            id: newUser.id
+            ok: true,
+            data: {
+                name: userData.name,
+                mail: userData.email,
+                affiliation: "ias",
+                netid: null,
+                id: newUser.id
+            }
         };
     }
 
@@ -168,7 +168,10 @@ export class AuthService {
      * @param password Input password
      * @returns User session data
      */
-    async login(email: string, password: string): Promise<SessionData> {
+    async login(
+        email: string,
+        password: string
+    ): Promise<Result<SessionData, string>> {
         // Error message is the same to prevent attackers from gaining information
         const ERR_MESSAGE = "Invalid email or password";
 
@@ -188,26 +191,23 @@ export class AuthService {
             )
             .innerJoin(pwdAuth, eq(user.id, pwdAuth.user_id))
             .limit(1);
-
-        if (existingUser.length === 0) {
-            throw new Error(ERR_MESSAGE);
-        }
+        if (existingUser.length === 0) return { ok: false, error: ERR_MESSAGE };
 
         const isValidPassword = await this.verifyPassword(
             password,
             existingUser[0].password
         );
-
-        if (!isValidPassword) {
-            throw new Error(ERR_MESSAGE);
-        }
+        if (!isValidPassword) return { ok: false, error: ERR_MESSAGE };
 
         return {
-            name: existingUser[0].name,
-            mail: existingUser[0].email,
-            affiliation: "ias",
-            netid: null,
-            id: existingUser[0].id
+            ok: true,
+            data: {
+                name: existingUser[0].name,
+                mail: existingUser[0].email,
+                affiliation: "ias",
+                netid: null,
+                id: existingUser[0].id
+            }
         };
     }
 
