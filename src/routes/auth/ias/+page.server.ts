@@ -55,5 +55,19 @@ export const actions: Actions = {
 
         await locals.session.set(loginRes.data);
         redirect(httpCodes.redirection.seeOther, "/home");
+    },
+
+    forgotPassword: async ({ request }) => {
+        const data = await request.formData();
+        const email = data.get("email") as string;
+
+        if (!email) {
+            return {
+                status: httpCodes.error.badRequest,
+                body: { error: "Missing email" }
+            };
+        }
+
+        const auth = new AuthService(db);
     }
 };
