@@ -51,6 +51,7 @@
                     <input
                         type="text"
                         id="name"
+                        name="name"
                         placeholder="Enter your full name"
                         class="rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
                         required />
@@ -61,6 +62,7 @@
                     <input
                         type="email"
                         id="email"
+                        name="email"
                         placeholder="your.email@ias.edu"
                         class="rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
                         required />
@@ -72,6 +74,7 @@
                     <input
                         type="password"
                         id="password"
+                        name="password"
                         placeholder="Create a password"
                         class="rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
                         required />
@@ -83,6 +86,7 @@
                     <input
                         type="password"
                         id="confirm-password"
+                        name="confirm-password"
                         placeholder="Confirm your password"
                         class="rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
                         required />

@@ -51,6 +51,7 @@
                     <input
                         type="email"
                         id="email"
+                        name="email"
                         placeholder="your.email@ias.edu"
                         class="rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
                         required />
