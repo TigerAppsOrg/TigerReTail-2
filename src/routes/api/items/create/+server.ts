@@ -1,5 +1,5 @@
 import { db } from "$lib/server/db";
-import { checkAuthentication } from "$lib/server/db/cas";
+import { checkAuthentication } from "$lib/server/security/cas";
 import {
     itemCategories,
     items,
