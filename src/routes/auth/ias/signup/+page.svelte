@@ -1,6 +1,54 @@
-<script>
+<script lang="ts">
     import { Button } from "$lib/components/ui/button";
+    import { Validator } from "$lib/validate";
     import BackButton from "../BackButton.svelte";
+    import ValidationErrors from "../ValidationErrors.svelte";
+
+    // Form validation
+    let name = "";
+    let email = "";
+    let password = "";
+    let confirmPassword = "";
+
+    let generalErrors: string[] = [];
+    let nameErrors: string[] = [];
+    let emailErrors: string[] = [];
+    let passwordErrors: string[] = [];
+    let confirmPasswordErrors: string[] = [];
+
+    const handleSubmit = (event: SubmitEvent) => {
+        const v = new Validator();
+
+        // Reset errors
+        generalErrors = [];
+        nameErrors = [];
+        emailErrors = [];
+        passwordErrors = [];
+        confirmPasswordErrors = [];
+
+        const vName = v.isValidName(name);
+        if (!vName.ok) {
+            nameErrors = vName.error;
+            event.preventDefault();
+        }
+
+        const vEmail = v.isValidEmail(email);
+        if (!vEmail.ok) {
+            emailErrors = vEmail.error;
+            event.preventDefault();
+        }
+
+        const vPassword = v.isStrongPassword(password);
+        if (!vPassword.ok) {
+            passwordErrors = vPassword.error;
+            event.preventDefault();
+        }
+
+        if (password !== confirmPassword) {
+            confirmPasswordErrors = ["Passwords do not match"];
+            event.preventDefault();
+        }
+    };
 </script>
 
 <BackButton href="/auth" text="Back" />
@@ -11,50 +59,55 @@
 </div>
 
 <!-- Registration form -->
-<form class="flex flex-col space-y-4">
+<form class="flex flex-col space-y-4" onsubmit={handleSubmit}>
+    <ValidationErrors errors={generalErrors} />
     <div class="flex flex-col space-y-2">
+        <ValidationErrors errors={nameErrors} />
         <label for="name" class="text-sm font-medium">Full Name</label>
         <input
+            bind:value={name}
             type="text"
             id="name"
             name="name"
             placeholder="Enter your full name"
-            class="auth-input"
-            required />
+            class="auth-input" />
     </div>
 
     <div class="flex flex-col space-y-2">
+        <ValidationErrors errors={emailErrors} />
         <label for="email" class="text-sm font-medium">Email</label>
         <input
+            bind:value={email}
             type="email"
             id="email"
             name="email"
             placeholder="your.email@ias.edu"
-            class="auth-input"
-            required />
+            class="auth-input" />
     </div>
 
     <div class="flex flex-col space-y-2">
+        <ValidationErrors errors={passwordErrors} />
         <label for="password" class="text-sm font-medium">Password</label>
         <input
+            bind:value={password}
             type="password"
             id="password"
             name="password"
             placeholder="Create a password"
-            class="auth-input"
-            required />
+            class="auth-input" />
     </div>
 
     <div class="flex flex-col space-y-2">
+        <ValidationErrors errors={confirmPasswordErrors} />
         <label for="confirm-password" class="text-sm font-medium"
             >Confirm Password</label>
         <input
+            bind:value={confirmPassword}
             type="password"
             id="confirm-password"
             name="confirm-password"
             placeholder="Confirm your password"
-            class="auth-input"
-            required />
+            class="auth-input" />
     </div>
 
     <Button

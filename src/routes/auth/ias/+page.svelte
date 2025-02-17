@@ -1,6 +1,12 @@
-<script>
+<script lang="ts">
     import { Button } from "$lib/components/ui/button";
     import BackButton from "./BackButton.svelte";
+    import ValidationErrors from "./ValidationErrors.svelte";
+
+    // Form validation
+    const generalErrors: string[] = [];
+    const emailErrors: string[] = [];
+    const passwordErrors: string[] = [];
 </script>
 
 <BackButton href="/auth" text="Back" />
@@ -11,7 +17,10 @@
 </div>
 
 <form class="flex flex-col space-y-4" method="POST" action="?/login">
+    <ValidationErrors errors={generalErrors} />
+
     <div class="flex flex-col space-y-2">
+        <ValidationErrors errors={emailErrors} />
         <label for="email" class="text-sm font-medium">Email</label>
         <input
             type="email"
@@ -23,6 +32,7 @@
     </div>
 
     <div class="flex flex-col space-y-2">
+        <ValidationErrors errors={passwordErrors} />
         <label for="password" class="text-sm font-medium">Password</label>
         <input
             type="password"
