@@ -4,23 +4,25 @@
     import BackButton from "../BackButton.svelte";
     import ValidationErrors from "../ValidationErrors.svelte";
 
-    // Form validation
-    let name = "";
-    let email = "";
-    let password = "";
-    let confirmPassword = "";
+    let { form } = $props();
 
-    let generalErrors: string[] = [];
-    let nameErrors: string[] = [];
-    let emailErrors: string[] = [];
-    let passwordErrors: string[] = [];
-    let confirmPasswordErrors: string[] = [];
+    // Form validation
+    let name = $state("");
+    let email = $state("");
+    let password = $state("");
+    let confirmPassword = $state("");
+
+    const generalErrors: string[] = form ? [form.body.error] : [];
+
+    let nameErrors: string[] = $state([]);
+    let emailErrors: string[] = $state([]);
+    let passwordErrors: string[] = $state([]);
+    let confirmPasswordErrors: string[] = $state([]);
 
     const handleSubmit = (event: SubmitEvent) => {
         const v = new Validator();
 
         // Reset errors
-        generalErrors = [];
         nameErrors = [];
         emailErrors = [];
         passwordErrors = [];

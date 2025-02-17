@@ -3,15 +3,16 @@
     import BackButton from "../BackButton.svelte";
     import ValidationErrors from "../ValidationErrors.svelte";
 
-    // Form validation
-    let email = "";
+    let { form } = $props();
 
-    let generalErrors: string[] = [];
-    let emailErrors: string[] = [];
+    // Form validation
+    let email = $state("");
+
+    const generalErrors: string[] = form ? [form.body.error] : [];
+    let emailErrors: string[] = $state([]);
 
     const handleSubmit = (event: SubmitEvent) => {
         // Reset errors
-        generalErrors = [];
         emailErrors = [];
 
         if (!email) {
