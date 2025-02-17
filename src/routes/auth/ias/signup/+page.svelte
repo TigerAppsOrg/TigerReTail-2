@@ -61,7 +61,11 @@
 </div>
 
 <!-- Registration form -->
-<form class="flex flex-col space-y-4" onsubmit={handleSubmit}>
+<form
+    class="flex flex-col space-y-4"
+    onsubmit={handleSubmit}
+    method="POST"
+    action="/auth/ias/?/register">
     <ValidationErrors errors={generalErrors} />
     <div class="flex flex-col space-y-2">
         <ValidationErrors errors={nameErrors} />

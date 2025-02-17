@@ -33,7 +33,11 @@
 </div>
 
 <!-- Email submission form -->
-<form class="flex flex-col space-y-4" onsubmit={handleSubmit}>
+<form
+    class="flex flex-col space-y-4"
+    onsubmit={handleSubmit}
+    method="POST"
+    action="/auth/ias/?/forgot">
     <ValidationErrors errors={generalErrors} />
     <div class="flex flex-col space-y-2">
         <ValidationErrors errors={emailErrors} />
