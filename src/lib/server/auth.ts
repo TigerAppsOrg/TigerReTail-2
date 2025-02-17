@@ -1,9 +1,10 @@
+import { type Result } from "$lib/constants";
+import { Validator } from "$lib/validate";
 import * as bcrypt from "bcrypt";
-import { pwdAuth, user } from "./db/schema";
 import { and, eq, sql } from "drizzle-orm";
-import type { SessionData } from "../../app";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { EMAIL_WHITELIST, type Result } from "$lib/constants";
+import type { SessionData } from "../../app";
+import { pwdAuth, user } from "./db/schema";
 
 type AuthUser = {
     name: string;
@@ -17,39 +18,13 @@ type AuthUser = {
 export class AuthService {
     private readonly SALT_ROUNDS = 10;
     private db: PostgresJsDatabase;
+    private validator = new Validator();
 
     constructor(database: PostgresJsDatabase) {
         this.db = database;
     }
 
     //------------------------------------------------------------------
-
-    private isIAS(email: string): boolean {
-        const iasPattern = /@ias.edu$/;
-        return iasPattern.test(email);
-    }
-
-    private isValidEmail(email: string): boolean {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return (
-            emailRegex.test(email) &&
-            (this.isIAS(email) || EMAIL_WHITELIST.includes(email))
-        );
-    }
-
-    private isValidName(name: string): boolean {
-        return name.length > 0 && name.length <= 100;
-    }
-
-    private isStrongPassword(password: string): boolean {
-        return (
-            password.length >= 8 && // At least 8 characters
-            /[A-Z]/.test(password) && // At least one uppercase letter
-            /[a-z]/.test(password) && // At least one lowercase letter
-            /[0-9]/.test(password) && // At least one number
-            /[^A-Za-z0-9]/.test(password) // At least one special character
-        );
-    }
 
     private async hashPassword(password: string): Promise<string> {
         const salt = await bcrypt.genSalt(this.SALT_ROUNDS);
@@ -78,13 +53,13 @@ export class AuthService {
         email: string,
         password: string
     ): Promise<Result<AuthUser, string>> {
-        if (!this.isValidEmail(email))
+        if (!this.validator.isValidEmail(email).ok)
             return { ok: false, error: "Invalid email" };
 
-        if (!this.isValidName(name))
+        if (!this.validator.isValidName(name).ok)
             return { ok: false, error: "Invalid name" };
 
-        if (!this.isStrongPassword(password))
+        if (!this.validator.isStrongPassword(password).ok)
             return { ok: false, error: "Password is not strong enough" };
 
         const existingUser = await this.db
@@ -222,7 +197,7 @@ export class AuthService {
         oldPassword: string,
         newPassword: string
     ) {
-        if (!this.isStrongPassword(newPassword)) {
+        if (!this.validator.isStrongPassword(newPassword).ok) {
             throw new Error("New password is not strong enough");
         }
     }
