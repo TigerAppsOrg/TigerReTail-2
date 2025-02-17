@@ -4,8 +4,21 @@
     import ValidationErrors from "../ValidationErrors.svelte";
 
     // Form validation
-    const generalErrors: string[] = [];
-    const emailErrors: string[] = [];
+    let email = "";
+
+    let generalErrors: string[] = [];
+    let emailErrors: string[] = [];
+
+    const handleSubmit = (event: SubmitEvent) => {
+        // Reset errors
+        generalErrors = [];
+        emailErrors = [];
+
+        if (!email) {
+            emailErrors = ["Email is required"];
+            event.preventDefault();
+        }
+    };
 </script>
 
 <BackButton href="/auth/ias" text="Back to Sign In" />
@@ -19,18 +32,18 @@
 </div>
 
 <!-- Email submission form -->
-<form class="flex flex-col space-y-4">
+<form class="flex flex-col space-y-4" onsubmit={handleSubmit}>
     <ValidationErrors errors={generalErrors} />
     <div class="flex flex-col space-y-2">
         <ValidationErrors errors={emailErrors} />
         <label for="email" class="text-sm font-medium">Email</label>
         <input
+            bind:value={email}
             type="email"
             id="email"
             name="email"
             placeholder="your.email@ias.edu"
-            class="auth-input"
-            required />
+            class="auth-input" />
     </div>
 
     <Button

@@ -4,9 +4,29 @@
     import ValidationErrors from "./ValidationErrors.svelte";
 
     // Form validation
-    const generalErrors: string[] = [];
-    const emailErrors: string[] = [];
-    const passwordErrors: string[] = [];
+    let email = "";
+    let password = "";
+
+    let generalErrors: string[] = [];
+    let emailErrors: string[] = [];
+    let passwordErrors: string[] = [];
+
+    const handleSubmit = (event: SubmitEvent) => {
+        // Reset errors
+        generalErrors = [];
+        emailErrors = [];
+        passwordErrors = [];
+
+        if (!email) {
+            emailErrors = ["Email is required"];
+            event.preventDefault();
+        }
+
+        if (!password) {
+            passwordErrors = ["Password is required"];
+            event.preventDefault();
+        }
+    };
 </script>
 
 <BackButton href="/auth" text="Back" />
@@ -16,31 +36,35 @@
     <p class="text-gray-600">Sign in with your IAS email (@ias.edu required)</p>
 </div>
 
-<form class="flex flex-col space-y-4" method="POST" action="?/login">
+<form
+    class="flex flex-col space-y-4"
+    method="POST"
+    action="?/login"
+    onsubmit={handleSubmit}>
     <ValidationErrors errors={generalErrors} />
 
     <div class="flex flex-col space-y-2">
         <ValidationErrors errors={emailErrors} />
         <label for="email" class="text-sm font-medium">Email</label>
         <input
+            bind:value={email}
             type="email"
             id="email"
             name="email"
             placeholder="your.email@ias.edu"
-            class="auth-input"
-            required />
+            class="auth-input" />
     </div>
 
     <div class="flex flex-col space-y-2">
         <ValidationErrors errors={passwordErrors} />
         <label for="password" class="text-sm font-medium">Password</label>
         <input
+            bind:value={password}
             type="password"
             id="password"
             name="password"
             placeholder="Enter your password"
-            class="auth-input"
-            required />
+            class="auth-input" />
     </div>
 
     <Button
