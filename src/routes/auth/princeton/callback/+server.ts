@@ -11,7 +11,7 @@ import {
     type RequestEvent,
     type RequestHandler
 } from "@sveltejs/kit";
-import { CASClient } from "$lib/server/db/cas";
+import { CASClient } from "$lib/server/security/cas";
 import { createUser, db, getUserByNetID } from "$lib/server/db";
 import { user } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";

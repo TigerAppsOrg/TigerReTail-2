@@ -1,4 +1,4 @@
-import { checkAuthentication } from "$lib/server/db/cas";
+import { checkAuthentication } from "$lib/server/security/cas";
 import type { RequestHandler } from "@sveltejs/kit";
 import { db } from "$lib/server/db";
 import { items as itemsTable } from "$lib/server/db/schema";
