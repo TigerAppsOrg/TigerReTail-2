@@ -1,7 +1,4 @@
 import { env } from "$env/dynamic/private";
-import postgres from "postgres";
-import type { DB } from "$lib/server/retrofit/old";
-import type { RequestEvent } from "@sveltejs/kit";
 import {
     convertItemCategories,
     convertItems,
@@ -9,6 +6,9 @@ import {
     convertRequests,
     convertUsers
 } from "$lib/server/retrofit/conversion";
+import type { DB } from "$lib/server/retrofit/old";
+import type { RequestEvent } from "@sveltejs/kit";
+import postgres from "postgres";
 
 export let POST = async (req: RequestEvent) => {
     return new Response("Disabled in production", {
@@ -21,12 +21,12 @@ if (import.meta.env.MODE === "development") {
     const { PostgresJSDialect } = await import("kysely-postgres-js");
 
     POST = async (req: RequestEvent) => {
-        const { SECRET } = await req.request.json();
-        if (SECRET !== env.SECRET) {
-            return new Response("Invalid secret", {
-                status: 403
-            });
-        }
+        // const { SECRET } = await req.request.json();
+        // if (SECRET !== env.SECRET) {
+        //     return new Response("Invalid secret", {
+        //         status: 403
+        //     });
+        // }
 
         const oldDB = new Kysely<DB>({
             dialect: new PostgresJSDialect({
