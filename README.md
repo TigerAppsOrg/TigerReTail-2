@@ -8,25 +8,25 @@ Princeton's modern marketplace - where Tigers buy, sell, and connect.
 
 ### Key Features
 
--   **List & Sell**: Create listings for items you want to sell or rent
--   **Request Items**: Post requests for specific items or services
--   **Connect & Trade**: Get matched with sellers and arrange safe on-campus transactions
+- **List & Sell**: Create listings for items you want to sell or rent
+- **Request Items**: Post requests for specific items or services
+- **Connect & Trade**: Get matched with sellers and arrange safe on-campus transactions
 
 ### Coming Spring 2025
 
--   **Auctions**: Real-time bidding system with automated settlement
--   **Enhanced Senior Sale**: Streamlined virtual yard sale experience
--   **In-App Messaging**: Direct communication between buyers and sellers
--   **Service Profiles**: Showcase your skills and services to the community
+- **Auctions**: Real-time bidding system with automated settlement
+- **Enhanced Senior Sale**: Streamlined virtual yard sale experience
+- **In-App Messaging**: Direct communication between buyers and sellers
+- **Service Profiles**: Showcase your skills and services to the community
 
 ## Tech Stack
 
 `TigerReTail 2` is built primarily with the following technologies:
 
--   **Frontend**: [Svelte](https://svelte.dev/), [TailwindCSS](https://tailwindcss.com/), [ShadCN Svelte](https://www.shadcn-svelte.com/)
--   **Backend**: [Bun](https://bun.sh/), [PostgreSQL](https://www.postgresql.org/), [DrizzleORM](https://drizzleorm.com/), [SvelteKit](https://kit.svelte.dev/)
--   **Deployment**: [Vercel](https://vercel.com/), [Docker](https://www.docker.com/)
--   **Tools**: [GitHub Actions](https://github.com/features/actions), [Prettier](https://prettier.io/), [ESLint](https://eslint.org/), [Vitest](https://vitest.dev/)
+- **Frontend**: [Svelte](https://svelte.dev/), [TailwindCSS](https://tailwindcss.com/), [ShadCN Svelte](https://www.shadcn-svelte.com/)
+- **Backend**: [Bun](https://bun.sh/), [PostgreSQL](https://www.postgresql.org/), [DrizzleORM](https://drizzleorm.com/), [SvelteKit](https://kit.svelte.dev/)
+- **Deployment**: [Vercel](https://vercel.com/), [Docker](https://www.docker.com/)
+- **Tools**: [GitHub Actions](https://github.com/features/actions), [Prettier](https://prettier.io/), [ESLint](https://eslint.org/), [Vitest](https://vitest.dev/)
 
 ## Development
 
