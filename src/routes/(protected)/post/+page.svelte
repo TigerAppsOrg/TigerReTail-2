@@ -17,8 +17,10 @@
     import moment from "moment";
     import { formSchema, type FormSchema } from "./schema";
 
-    import { CATEGORIES, QUALITIES } from "$lib";
     import { X } from "lucide-svelte";
+    import { CATEGORIES } from "$lib";
+    import type { CreateItemState } from "../../api/items/create/schema";
+    import type { CreateItemImageState } from "../../api/items/createImage/schema";
 
     export let data: SuperValidated<Infer<FormSchema>>;
 
@@ -29,39 +31,68 @@
     const { form: formData, enhance } = form;
 
     async function uploadForm() {
-        const formDataToUpload = new FormData();
+        const postData: CreateItemState = {
+            name: $formData.name,
+            price: $formData.price.toString(),
+            quality: $formData.quality,
+            description: $formData.description,
+            item_type: "sell",
+            categories: $formData.categories
+        };
 
-        formDataToUpload.append("name", $formData.name);
-        formDataToUpload.append("description", $formData.description);
-        formDataToUpload.append("price", $formData.price.toString());
-        formDataToUpload.append("negotiable", $formData.negotiable.toString());
-        formDataToUpload.append("deadline", $formData.deadline || "");
-        formDataToUpload.append("category", $formData.category); // change to array?
-        formDataToUpload.append("quality", $formData.quality);
-
-        // Append images to FormData
-        if ($formData.images && $formData.images.length > 0) {
-            for (const image of $formData.images) {
-                formDataToUpload.append("images", image);
-            }
-        }
-
+        let response;
+        // Fetch from "/api/items/create" with postData
         try {
-            const response = await fetch("/api/upload", {
+            response = await fetch("/api/items/create", {
                 method: "POST",
-                body: formDataToUpload
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(postData)
             });
 
-            if (!response.ok) {
-                throw new Error("Form upload failed");
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+            } else {
+                console.error("Failed to upload item");
+                return;
             }
-
-            const result = await response.json();
-            console.log("Form uploaded successfully:", result);
-            goto("/home"); // Redirect after successful upload
         } catch (error) {
-            console.error("Error uploading form:", error);
+            console.error("Failed to upload item", error);
+            return;
         }
+
+        const responseJson = await response.json();
+        console.log(responseJson);
+
+        for (const image of $formData.images) {
+            const uploadData: CreateItemImageState = {
+                item_id: responseJson.id,
+                file: image
+            };
+
+            let imageResponse;
+            try {
+                imageResponse = await fetch("/api/items/createImage", {
+                    method: "POST",
+                    body: JSON.stringify(uploadData)
+                });
+
+                if (imageResponse.ok) {
+                    const data = await imageResponse.json();
+                    console.log(data);
+                } else {
+                    console.error("Failed to upload image");
+                    return;
+                }
+            } catch (error) {
+                console.error("Failed to upload image", error);
+                return;
+            }
+        }
+
+        goto("/home");
     }
 </script>
 
@@ -204,7 +235,7 @@
                         </Form.Control>
                         <Form.FieldErrors />
                     </Form.Field>
-                    <Form.Field {form} name="negotiable">
+                    <!-- <Form.Field {form} name="negotiable">
                         <Form.Control>
                             <Form.Label>Negotiability</Form.Label>
                             <div class="flex items-center">
@@ -222,34 +253,17 @@
                             </div>
                         </Form.Control>
                         <Form.FieldErrors />
-                    </Form.Field>
+                    </Form.Field> -->
                 </div>
 
-                <Form.Field {form} name="deadline">
-                    <Form.Control>
-                        <Form.Label>Deadline to Sell</Form.Label>
-                        <Input
-                            type="date"
-                            bind:value={$formData.deadline}
-                            required />
-                        {#if $formData.deadline}
-                            <p class="mt-1 pl-2 text-xs text-gray-500">
-                                {moment($formData.deadline).fromNow(true)} from today
-                            </p>
-                        {/if}
-                    </Form.Control>
-                    <Form.FieldErrors />
-                </Form.Field>
-
                 <div class="flex space-x-8">
-                    <Form.Field {form} name="category">
+                    <Form.Field {form} name="categories">
                         <Form.Control>
-                            <Form.Label>Category</Form.Label>
+                            <Form.Label>Categories</Form.Label>
                             <select
                                 multiple
-                                bind:value={$formData.category}
-                                required
-                                placeholder="select category"
+                                bind:value={$formData.categories}
+                                placeholder="select categories"
                                 class="mt-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
                                 {#each CATEGORIES as category}
                                     <option value={category}>{category}</option>
@@ -259,7 +273,7 @@
                         <Form.FieldErrors />
                     </Form.Field>
 
-                    <Form.Field {form} name="quality">
+                    <!-- <Form.Field {form} name="quality">
                         <Form.Control>
                             <Form.Label>Condition</Form.Label>
                             <select
@@ -268,13 +282,13 @@
                                 class="mt-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
                                 <option value="" disabled selected
                                     >Select quality</option>
-                                {#each QUALITIES as quality}
+                                {#each qualityEnum.enumValues as quality}
                                     <option value={quality}>{quality}</option>
                                 {/each}
                             </select>
                         </Form.Control>
                         <Form.FieldErrors />
-                    </Form.Field>
+                    </Form.Field> -->
                 </div>
             </div>
         </div>

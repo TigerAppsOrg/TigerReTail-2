@@ -1,28 +1,16 @@
 import { db } from "$lib/server/db";
 import { checkAuthentication } from "$lib/server/security/cas";
-import {
-    itemCategories,
-    items,
-    ZodCategory,
-    ZodItemType,
-    ZodQuality
-} from "$lib/server/db/schema";
 import type { RequestHandler } from "@sveltejs/kit";
-import { z } from "zod";
-
-const schema = z.object({
-    name: z.string(),
-    price: z.string(),
-    quality: ZodQuality.optional(),
-    description: z.string().optional(),
-    item_type: ZodItemType,
-    categories: z.array(ZodCategory).optional()
-});
+import { itemCategories, items } from "$lib/server/db/schema";
+import { createItemSchema } from "./schema";
 
 export const POST: RequestHandler = async ({ locals, request }) => {
     checkAuthentication(locals.session.data);
 
-    const data = schema.safeParse(request.json());
+    const json = await request.json();
+    console.log(json);
+
+    const data = createItemSchema.safeParse(json);
     if (!data.success) {
         return new Response(JSON.stringify({ error: data.error }), {
             status: 400,

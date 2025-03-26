@@ -1,21 +1,16 @@
 import { checkAuthentication } from "$lib/server/security/cas";
 import type { RequestHandler } from "@sveltejs/kit";
-import { z } from "zod";
 import { db } from "$lib/server/db";
 import { itemImages } from "$lib/server/db/schema";
 import s3Client from "$lib/server/aws/s3";
 import { env } from "$env/dynamic/private";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-
-const schema = z.object({
-    item_id: z.number(),
-    file: z.custom<File>((file) => file instanceof File)
-});
+import { createItemImageSchema } from "./schema";
 
 export const POST: RequestHandler = async ({ locals, request }) => {
     checkAuthentication(locals.session.data);
 
-    const data = schema.safeParse(request.json());
+    const data = createItemImageSchema.safeParse(request.json());
     if (!data.success) {
         return new Response(JSON.stringify({ error: data.error }), {
             status: 400,

@@ -1,7 +1,9 @@
 // place files you want to import through the `$lib` alias in this folder.
 
+import { z } from "zod";
+
 // weird Array<String> types to be used for database types as well
-export const CATEGORIES: readonly [string, ...string[]] = [
+export const CATEGORIES = [
     "accessories",
     "beauty supplies",
     "clothing",
@@ -16,26 +18,22 @@ export const CATEGORIES: readonly [string, ...string[]] = [
     "tech",
     "textbooks",
     "transportation"
-];
+] as const;
 
-export const AFFILIATIONS: readonly [string, ...string[]] = [
-    "ias",
-    "princeton"
-];
+export const ZodCategory = z.enum(CATEGORIES);
 
-export const ITEM_TYPES: readonly [string, ...string[]] = ["sell", "rent"];
+export const AFFILIATIONS = ["ias", "princeton"] as const;
 
-export const QUALITIES: readonly [string, ...string[]] = [
-    "new",
-    "like new",
-    "good",
-    "fair",
-    "poor"
-];
+export const ZodAffiliation = z.enum(AFFILIATIONS);
 
-export const STATUSES: readonly [string, ...string[]] = [
-    "active",
-    "inactive",
-    "sold",
-    "expired"
-];
+export const ITEM_TYPES = ["sell", "rent"] as const;
+
+export const ZodItemType = z.enum(ITEM_TYPES);
+
+export const QUALITIES = ["new", "like new", "good", "fair", "poor"] as const;
+
+export const ZodQuality = z.enum(QUALITIES);
+
+export const STATUSES = ["active", "inactive", "sold", "expired"] as const;
+
+export const ZodStatus = z.enum(STATUSES);

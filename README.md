@@ -50,6 +50,9 @@ bun install
 ```bash
 DATABASE_URL="postgres://root:mysecretpassword@localhost:5432/local"
 SESSION_SECRET=12345678901234567890123456789012
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_STORAGE_BUCKET_NAME=
 ```
 
 4. Start the local database and development server. Docker must be running on your machine for this to work (since it spins up a PostgreSQL container):
