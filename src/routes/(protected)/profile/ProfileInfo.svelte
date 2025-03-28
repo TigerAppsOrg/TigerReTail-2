@@ -1,48 +1,138 @@
 <script lang="ts">
     import { Input } from "$lib/components/ui/input/index.js";
     import { Label } from "$lib/components/ui/label/index.js";
-  </script>
+    let ogProfile = {
+        name: 'TigerApps',
+        email: 'TigerApps@gmail.com',
+        bio: 'Hello, I am TigerApps',
+        number: '123-456-7890',
+        payment: '@TigerApps'
+    };
 
-<div class="border border-blue-400 w-full max-w-6xl p-6 relative">
+    let profile = { ...ogProfile };
+    let isEditing = false;
+
+    function handleEdit() {
+        if (isEditing) {
+            ogProfile = { ...profile };
+            console.log('Profile saved:', ogProfile);
+        } else {
+            profile = { ...ogProfile };
+        }
+        isEditing = !isEditing;
+    }
+
+    function handleCancel() {
+        if (isEditing) {
+            // Revert to original values
+            profile = { ...ogProfile };
+            isEditing = false;
+        }
+    }
+
+    $: isFormValid = profile.name.trim() !== '' && 
+                    profile.email.includes('@') && 
+                    profile.number.trim() !== '';
+</script>
+
+<div class="relative w-full max-w-6xl border border-blue-400 p-6">
     <div class="w-full">
-        <div class="flex justify-between items-center mb-6">
+        <div class="mb-6 flex items-center justify-between">
             <span>Profile Info</span>
-            <button class="bg-blue-400 hover:bg-blue-200 text-white font-bold py-1 px-3 rounded">
-                Edit
-            </button>
+            <div class="space-x-2">
+                {#if isEditing}
+                <button
+                        on:click={handleCancel}
+                        class="rounded bg-gray-400 px-3 py-1 font-bold text-white hover:bg-gray-500">
+                        Cancel
+                    </button>
+                    <button
+                        on:click={handleEdit}
+                        disabled={!isFormValid}
+                        class="rounded bg-blue-400 px-3 py-1 font-bold text-white hover:bg-blue-200 disabled:bg-gray-300">
+                        Save
+                    </button>
+                {:else}
+                    <button
+                        on:click={handleEdit}
+                        class="rounded bg-blue-400 px-3 py-1 font-bold text-white hover:bg-blue-200">
+                        Edit
+                    </button>
+                {/if}
+            </div>
         </div>
-    
-        <div class="flex justify-center mb-6">
-            <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+
+        <div class="mb-6 flex justify-center">
+            <div
+                class="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-gray-200">
                 <!-- You can add an img tag here if you have a specific image -->
                 <span class="text-gray-500">Profile Pic</span>
             </div>
         </div>
-    
+
         <div class="flex flex-col items-center gap-4">
             <div class="flex w-full max-w-sm flex-col gap-1.5">
                 <Label for="name">Name</Label>
-                <Input type="name" id="name" placeholder="TigerApps" />
+                <div class:disabled={!isEditing}>
+                    <Input 
+                        type="text" 
+                        id="name" 
+                        bind:value={profile.name}
+                        disabled={!isEditing}
+                        class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}
+                    />
+                </div>
             </div>
+
             <div class="flex w-full max-w-sm flex-col gap-1.5">
                 <Label for="email">Email</Label>
-                <Input type="email" id="email" placeholder="TigerApps@gmail.com" />
+                <div class:disabled={!isEditing}>
+                    <Input
+                    type="email"
+                    id="email"
+                    bind:value={profile.email}
+                    disabled={!isEditing}
+                    class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}
+                />
+                </div>
             </div>
-            <div class="flex w-full max-sm flex-col gap-1.5">
-                <Label for="bio"> Bio</Label>
-                <Input type="bio" id="bio" placeholder="Hello, I am TigerApps" />
+
+            <div class="max-sm flex w-full flex-col gap-1.5">
+                <Label for="bio">Bio</Label>
+                <div class:disabled={!isEditing}>
+                    <Input
+                    type="bio"
+                    id="bio"
+                    bind:value={profile.bio}
+                    disabled={!isEditing}
+                    class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'} 
+                    />
+                </div>
             </div>
-            <div class="flex w-full max-sm flex-col gap-1.5">
-                <Label for="number"> Phone #</Label>
-                <Input type="number" id="number" placeholder="123-456-7890" />
+            <div class="max-sm flex w-full flex-col gap-1.5">
+                <Label for="number">Phone #</Label>
+                <div class:disabled={!isEditing}>
+                    <Input 
+                    type="tel" 
+                    id="number" 
+                    bind:value={profile.number}
+                    disabled={!isEditing}
+                    class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}
+                    />
+                </div>
             </div>
-            <div class="flex w-full max-sm flex-col gap-1.5">
-                <Label for="payment"> Venmo/Zelle</Label>
-                <Input type="payment" id="payment" placeholder="@TigerApps" />
+            <div class="max-sm flex w-full flex-col gap-1.5">
+                <Label for="payment">Venmo/Zelle</Label>
+                <div class:disabled={!isEditing}>
+                <Input 
+                type="payment" 
+                id="payment" 
+                bind:value={profile.payment}
+                disabled={!isEditing}
+                class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}
+                />
+            </div>
             </div>
         </div>
-
     </div>
-    
 </div>
-

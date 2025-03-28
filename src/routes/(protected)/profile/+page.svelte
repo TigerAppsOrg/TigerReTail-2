@@ -11,10 +11,10 @@
     <div class="flex flex-1 flex-col">
         <h2 class="mx-auto mb-2 w-[90%] border-b">Profile</h2>
         <div class="flex flex-1 gap-4">
-            <div>
+            <div class="w-96">
                 <ProfileInfo />
             </div>
-            <div>
+            <div class="flex-1">
                 <MyItems />
             </div>
         </div>
