@@ -18,7 +18,7 @@
     import { formSchema, type FormSchema } from "./schema";
 
     import { X } from "lucide-svelte";
-    import { CATEGORIES } from "$lib";
+    import { CATEGORIES, QUALITIES } from "$lib";
     import type { CreateItemState } from "../../api/items/create/schema";
     import type { CreateItemImageState } from "../../api/items/createImage/schema";
 
@@ -273,7 +273,7 @@
                         <Form.FieldErrors />
                     </Form.Field>
 
-                    <!-- <Form.Field {form} name="quality">
+                    <Form.Field {form} name="quality">
                         <Form.Control>
                             <Form.Label>Condition</Form.Label>
                             <select
@@ -282,13 +282,13 @@
                                 class="mt-2 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
                                 <option value="" disabled selected
                                     >Select quality</option>
-                                {#each qualityEnum.enumValues as quality}
+                                {#each QUALITIES as quality}
                                     <option value={quality}>{quality}</option>
                                 {/each}
                             </select>
                         </Form.Control>
                         <Form.FieldErrors />
-                    </Form.Field> -->
+                    </Form.Field>
                 </div>
             </div>
         </div>
