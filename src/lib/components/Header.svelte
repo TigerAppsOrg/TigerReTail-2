@@ -29,8 +29,6 @@
                     align="end"
                     alignOffset={-5}
                     class="rounded-xl shadow-lg">
-                    <DropdownMenuItem onclick={() => goto("/settings")}
-                        >Settings</DropdownMenuItem>
                     <DropdownMenuItem onclick={() => goto("/profile")}
                         >My Profile</DropdownMenuItem>
                     <DropdownMenuItem>
