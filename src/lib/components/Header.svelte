@@ -9,7 +9,7 @@
     import Button from "./ui/button/button.svelte";
 </script>
 
-<header class=" flex h-14 items-center border-b shadow-sm">
+<header class="border-std flex h-14 items-center border-b shadow-sm">
     <div class="cont mx-auto flex items-center justify-between">
         <a
             href="/home"

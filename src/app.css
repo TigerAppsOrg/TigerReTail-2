@@ -92,3 +92,7 @@ body {
 .auth-input {
     @apply rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none;
 }
+
+.border-std {
+    @apply border-gray-300;
+}
