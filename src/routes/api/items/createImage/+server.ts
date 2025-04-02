@@ -10,7 +10,8 @@ import { createItemImageSchema } from "./schema";
 export const POST: RequestHandler = async ({ locals, request }) => {
     checkAuthentication(locals.session.data);
 
-    const data = createItemImageSchema.safeParse(request.json());
+    const data = createItemImageSchema.safeParse(await request.json());
+    console.log(data);
     if (!data.success) {
         return new Response(JSON.stringify({ error: data.error }), {
             status: 400,
