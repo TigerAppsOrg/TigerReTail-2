@@ -95,5 +95,5 @@ body {
 }
 
 .border-std {
-    @apply border-gray-300;
+    @apply border-gray-300 dark:border-gray-600;
 }
