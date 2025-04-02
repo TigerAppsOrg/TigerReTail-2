@@ -24,7 +24,7 @@
     };
 </script>
 
-<div class="flex flex-col overflow-hidden">
+<div class="flex flex-col overflow-hidden h-full">
     <header class="border-b border-std p-2 pb-4 flex flex-col cont mb-6">
         <div
             class="flex flex-col md:flex-row md:items-center md:justify-between w-full md:gap-16 gap-2">
@@ -86,7 +86,7 @@
         <aside>
             <LeftBar />
         </aside>
-        <main class="flex-1 bg-white">
+        <main class="flex-1">
             <ItemView {isCompact} />
         </main>
     </section>
