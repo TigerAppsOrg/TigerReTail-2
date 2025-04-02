@@ -30,7 +30,7 @@
     </div>
 {/snippet}
 
-<aside>
+<aside class="space-y-4">
     {@render filterSection("Categories", CATEGORIES)}
     {@render filterSection("Qualities", QUALITIES)}
 </aside>
