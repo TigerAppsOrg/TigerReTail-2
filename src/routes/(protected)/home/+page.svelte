@@ -29,7 +29,7 @@
     <header class="border-b border-std p-2 pb-4 flex flex-col cont mb-6">
         <div class="flex items-center justify-between w-full gap-16">
             <div>
-                <h2 class="text-lg font-bold">Items for Sale</h2>
+                <h2 class="text-xl font-bold">Items for Sale</h2>
                 <p class="text-sm">
                     Find items to purchase here. Check out our FAQ for more.
                 </p>
