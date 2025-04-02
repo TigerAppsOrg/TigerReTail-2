@@ -6,6 +6,7 @@
         DropdownMenuItem,
         DropdownMenuTrigger
     } from "$lib/components/ui/dropdown-menu";
+    import DarkModeToggle from "./DarkModeToggle.svelte";
     import Button from "./ui/button/button.svelte";
 </script>
 
@@ -38,6 +39,8 @@
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            <DarkModeToggle />
         </div>
     </div>
 </header>
