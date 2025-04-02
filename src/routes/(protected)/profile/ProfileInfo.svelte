@@ -1,63 +1,57 @@
 <script lang="ts">
+    import { Button } from "$lib/components/ui/button";
     import { Input } from "$lib/components/ui/input/index.js";
     import { Label } from "$lib/components/ui/label/index.js";
+
     let ogProfile = {
-        name: 'TigerApps',
-        email: 'TigerApps@gmail.com',
-        bio: 'Hello, I am TigerApps',
-        number: '123-456-7890',
-        payment: '@TigerApps'
+        name: "TigerApps",
+        email: "TigerApps@gmail.com",
+        bio: "Hello, I am TigerApps",
+        number: "123-456-7890",
+        payment: "@TigerApps"
     };
 
-    let profile = { ...ogProfile };
-    let isEditing = false;
+    let profile = $state({ ...ogProfile });
+    let isEditing = $state(false);
 
-    function handleEdit() {
+    const handleEdit = () => {
         if (isEditing) {
             ogProfile = { ...profile };
-            console.log('Profile saved:', ogProfile);
+            console.log("Profile saved:", ogProfile);
         } else {
             profile = { ...ogProfile };
         }
         isEditing = !isEditing;
-    }
+    };
 
-    function handleCancel() {
+    // Revert to original values
+    const handleCancel = () => {
         if (isEditing) {
-            // Revert to original values
             profile = { ...ogProfile };
             isEditing = false;
         }
-    }
+    };
 
-    $: isFormValid = profile.name.trim() !== '' && 
-                    profile.email.includes('@') && 
-                    profile.number.trim() !== '';
+    let isFormValid = $derived(
+        profile.name.trim() !== "" &&
+            profile.email.includes("@") &&
+            profile.number.trim() !== ""
+    );
 </script>
 
-<div class="relative w-full max-w-6xl border border-blue-400 p-6">
+<div
+    class="relative w-full max-w-6xl rounded-lg border border-std p-6 shadow-md">
     <div class="w-full">
         <div class="mb-6 flex items-center justify-between">
             <span>Profile Info</span>
             <div class="space-x-2">
                 {#if isEditing}
-                <button
-                        on:click={handleCancel}
-                        class="rounded bg-gray-400 px-3 py-1 font-bold text-white hover:bg-gray-500">
-                        Cancel
-                    </button>
-                    <button
-                        on:click={handleEdit}
-                        disabled={!isFormValid}
-                        class="rounded bg-blue-400 px-3 py-1 font-bold text-white hover:bg-blue-200 disabled:bg-gray-300">
-                        Save
-                    </button>
+                    <Button onclick={handleCancel} variant="outline"
+                        >Cancel</Button>
+                    <Button onclick={handleEdit} disabled={!isFormValid}
+                        >Save</Button>
                 {:else}
-                    <button
-                        on:click={handleEdit}
-                        class="rounded bg-blue-400 px-3 py-1 font-bold text-white hover:bg-blue-200">
-                        Edit
-                    </button>
+                    <Button onclick={handleEdit}>Edit</Button>
                 {/if}
             </div>
         </div>
@@ -74,13 +68,14 @@
             <div class="flex w-full max-w-sm flex-col gap-1.5">
                 <Label for="name">Name</Label>
                 <div class:disabled={!isEditing}>
-                    <Input 
-                        type="text" 
-                        id="name" 
+                    <Input
+                        type="text"
+                        id="name"
                         bind:value={profile.name}
                         disabled={!isEditing}
-                        class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}
-                    />
+                        class={isEditing
+                            ? ""
+                            : "cursor-not-allowed bg-gray-100 text-gray-500"} />
                 </div>
             </div>
 
@@ -88,12 +83,13 @@
                 <Label for="email">Email</Label>
                 <div class:disabled={!isEditing}>
                     <Input
-                    type="email"
-                    id="email"
-                    bind:value={profile.email}
-                    disabled={!isEditing}
-                    class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}
-                />
+                        type="email"
+                        id="email"
+                        bind:value={profile.email}
+                        disabled={!isEditing}
+                        class={isEditing
+                            ? ""
+                            : "cursor-not-allowed bg-gray-100 text-gray-500"} />
                 </div>
             </div>
 
@@ -101,37 +97,40 @@
                 <Label for="bio">Bio</Label>
                 <div class:disabled={!isEditing}>
                     <Input
-                    type="bio"
-                    id="bio"
-                    bind:value={profile.bio}
-                    disabled={!isEditing}
-                    class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'} 
-                    />
+                        type="bio"
+                        id="bio"
+                        bind:value={profile.bio}
+                        disabled={!isEditing}
+                        class={isEditing
+                            ? ""
+                            : "cursor-not-allowed bg-gray-100 text-gray-500"} />
                 </div>
             </div>
             <div class="max-sm flex w-full flex-col gap-1.5">
                 <Label for="number">Phone #</Label>
                 <div class:disabled={!isEditing}>
-                    <Input 
-                    type="tel" 
-                    id="number" 
-                    bind:value={profile.number}
-                    disabled={!isEditing}
-                    class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}
-                    />
+                    <Input
+                        type="tel"
+                        id="number"
+                        bind:value={profile.number}
+                        disabled={!isEditing}
+                        class={isEditing
+                            ? ""
+                            : "cursor-not-allowed bg-gray-100 text-gray-500"} />
                 </div>
             </div>
             <div class="max-sm flex w-full flex-col gap-1.5">
                 <Label for="payment">Venmo/Zelle</Label>
                 <div class:disabled={!isEditing}>
-                <Input 
-                type="payment" 
-                id="payment" 
-                bind:value={profile.payment}
-                disabled={!isEditing}
-                class={isEditing ? '' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}
-                />
-            </div>
+                    <Input
+                        type="payment"
+                        id="payment"
+                        bind:value={profile.payment}
+                        disabled={!isEditing}
+                        class={isEditing
+                            ? ""
+                            : "cursor-not-allowed bg-gray-100 text-gray-500"} />
+                </div>
             </div>
         </div>
     </div>

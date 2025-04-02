@@ -8,8 +8,11 @@
     <header class="border-b bg-blue-50 p-2">
         <button> Back to Image Gallery </button>
     </header>
-    <div class="flex flex-1 flex-col">
-        <h2 class="mx-auto mb-2 w-[90%] border-b">Profile</h2>
+    <div class="cont flex flex-1 flex-col">
+        <h2
+            class="mx-auto mb-4 w-full border-b border-std pb-2 text-xl font-bold">
+            Profile
+        </h2>
         <div class="flex flex-1 gap-4">
             <div class="w-96">
                 <ProfileInfo />
