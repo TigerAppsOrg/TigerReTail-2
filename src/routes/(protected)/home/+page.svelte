@@ -26,7 +26,7 @@
 
 <div class="flex flex-col overflow-hidden">
     <header class="border-b border-std p-2 pb-4 flex flex-col cont mb-6">
-        <div class="flex items-center justify-between w-full gap-16">
+        <div class="std-double-flex w-full md:gap-16 gap-2">
             <div>
                 <h2 class="text-xl font-bold">Items for Sale</h2>
                 <p class="text-sm">
