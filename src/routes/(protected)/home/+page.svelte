@@ -34,7 +34,7 @@
                     Find items to purchase here. Check out our FAQ for more.
                 </p>
             </div>
-            <div class="flex items-center flex-1 max-w-96">
+            <div class="flex items-center flex-1 max-w-96 gap-1">
                 <Input
                     type="text"
                     placeholder="Search..."
