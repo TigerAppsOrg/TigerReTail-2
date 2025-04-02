@@ -47,7 +47,8 @@
             </div>
         </div>
         <div class="flex items-center justify-between mt-4">
-            <div class="flex items-center space-x-2">
+            <div
+                class="flex items-center space-x-2 border p-2 rounded-xl bg-secondary">
                 <Checkbox
                     id="compact"
                     bind:checked={isCompact}
