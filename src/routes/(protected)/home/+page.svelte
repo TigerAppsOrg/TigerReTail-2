@@ -13,11 +13,16 @@
 
     let { data } = $props();
 
+    let searchValue = $state("");
     let isCompact = $state(false);
     let sortBy = $state<SortValue>("date_new");
     let sortByDisplay = $derived(
         sortValues.find((s) => s.value === sortBy)!.label
     );
+
+    const handleSearch = async () => {
+        console.log("Searching for: ", searchValue);
+    };
 </script>
 
 <div class="flex flex-col overflow-hidden">
@@ -30,8 +35,15 @@
                 </p>
             </div>
             <div class="flex items-center flex-1 max-w-96">
-                <Input type="text" placeholder="Search..." />
-                <Button type="submit"><SearchIcon class="size-4" /></Button>
+                <Input
+                    type="text"
+                    placeholder="Search..."
+                    bind:value={searchValue}
+                    onkeydown={(e) => {
+                        if (e.key === "Enter") handleSearch();
+                    }} />
+                <Button onclick={handleSearch}
+                    ><SearchIcon class="size-4" /></Button>
             </div>
         </div>
         <div class="flex items-center justify-between mt-4">
@@ -71,7 +83,7 @@
             <LeftBar />
         </aside>
         <main class="flex-1 bg-white">
-            <ItemView />
+            <ItemView {isCompact} />
         </main>
     </section>
 </div>
