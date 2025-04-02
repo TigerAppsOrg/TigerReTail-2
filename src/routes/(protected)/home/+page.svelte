@@ -1,6 +1,6 @@
 <script>
-    import ItemView from "$lib/components/ItemView.svelte";
-    import LeftBar from "$lib/components/LeftBar.svelte";
+    import ItemView from "./ItemView.svelte";
+    import LeftBar from "./LeftBar.svelte";
 
     let { data } = $props();
 </script>
