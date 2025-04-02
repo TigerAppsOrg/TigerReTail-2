@@ -9,19 +9,18 @@
 
     import ItemView from "./ItemView.svelte";
     import LeftBar from "./LeftBar.svelte";
-    import { sortValues, type SortValue } from "$lib/utils";
+    import { searchState, sortValues } from "$lib/client/state.svelte";
 
     let { data } = $props();
 
     let searchValue = $state("");
     let isCompact = $state(false);
-    let sortBy = $state<SortValue>("date_new");
     let sortByDisplay = $derived(
-        sortValues.find((s) => s.value === sortBy)!.label
+        sortValues.find((s) => s.value === searchState.value.sortBy)!.label
     );
 
     const handleSearch = async () => {
-        console.log("Searching for: ", searchValue);
+        searchState.value.query = searchValue;
     };
 </script>
 
@@ -62,7 +61,10 @@
             </div>
 
             <div>
-                <Select.Root type="single" name="sortBy" bind:value={sortBy}>
+                <Select.Root
+                    type="single"
+                    name="sortBy"
+                    bind:value={searchState.value.sortBy}>
                     <Select.Trigger>
                         {sortByDisplay}
                     </Select.Trigger>
