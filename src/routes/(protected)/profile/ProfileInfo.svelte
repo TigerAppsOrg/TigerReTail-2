@@ -39,11 +39,10 @@
     );
 </script>
 
-<div
-    class="relative w-full max-w-6xl rounded-lg border border-std p-6 shadow-md">
+<section class="w-full rounded-lg border border-std p-6 shadow-sm">
     <div class="w-full">
         <div class="mb-6 flex items-center justify-between">
-            <span>Profile Info</span>
+            <span class="text-lg">Profile Info</span>
             <div class="space-x-2">
                 {#if isEditing}
                     <Button onclick={handleCancel} variant="outline"
@@ -134,4 +133,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>
