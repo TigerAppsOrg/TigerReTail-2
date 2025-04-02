@@ -1,4 +1,6 @@
 <script lang="ts">
+    import ItemCard from "./ItemCard.svelte";
+
     interface Props {
         isCompact: boolean;
     }
@@ -10,6 +12,8 @@
     {#if isCompact}
         <div>Compact View</div>
     {:else}
-        <div>Image View</div>
+        <div>
+            <ItemCard />
+        </div>
     {/if}
 </section>
