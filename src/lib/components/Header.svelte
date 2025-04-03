@@ -6,6 +6,7 @@
         DropdownMenuItem,
         DropdownMenuTrigger
     } from "$lib/components/ui/dropdown-menu";
+    import { PlusIcon, UserIcon } from "lucide-svelte";
     import DarkModeToggle from "./DarkModeToggle.svelte";
     import Button from "./ui/button/button.svelte";
 </script>
@@ -20,12 +21,13 @@
             <h1 class="font-semibold tracking-tighter">TigerReTail</h1>
         </a>
 
-        <div class="flex items-center space-x-8">
-            <Button href="/post">Post</Button>
-
+        <div class="flex items-center space-x-4">
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <div>Profile</div>
+                    <Button variant="ghost" class="flex items-center space-x-1">
+                        <UserIcon class="size-5" />
+                        <span> Profile </span>
+                    </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                     align="end"
@@ -40,6 +42,11 @@
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            <Button href="/post" class="space-x-1">
+                <PlusIcon class="size-5" />
+                <span> Post </span>
+            </Button>
 
             <DarkModeToggle />
         </div>
