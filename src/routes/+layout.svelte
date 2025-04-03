@@ -1,5 +1,7 @@
 <script lang="ts">
     import "../app.css";
+    import { ModeWatcher } from "mode-watcher";
+
     let { children } = $props();
 </script>
 
@@ -7,4 +9,5 @@
     <title>TigerReTail</title>
 </svelte:head>
 
+<ModeWatcher />
 {@render children()}
