@@ -5,7 +5,9 @@
 </script>
 
 <div class="flex h-screen flex-col overflow-hidden">
-    <Header />
+    <div>
+        <Header />
+    </div>
     <div class="flex-1">
         {@render children()}
     </div>
