@@ -2,7 +2,7 @@ import { ZodCategory, ZodQuality } from "$lib";
 import { z } from "zod";
 import { ZodFile } from "../../api/items/createImage/schema";
 
-export const formSchema = z.object({
+export const itemFormSchema = z.object({
     images: z.array(ZodFile),
     name: z.string().min(1, "Name is required"),
     price: z.number().min(0, "Price must be a positive number"),
@@ -12,5 +12,5 @@ export const formSchema = z.object({
     categories: z.array(ZodCategory)
 });
 
-export type FormSchema = typeof formSchema;
-export type FormData = z.infer<FormSchema>;
+export type ItemFormSchema = typeof itemFormSchema;
+export type ItemFormData = z.infer<ItemFormSchema>;
