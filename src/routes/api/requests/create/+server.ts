@@ -1,8 +1,8 @@
 import { db } from "$lib/server/db";
 import { checkAuthentication } from "$lib/server/security/cas";
 import type { RequestHandler } from "@sveltejs/kit";
-import { itemCategories, items } from "$lib/server/db/schema";
-import { createItemSchema } from "./schema";
+import { requestCategories, requests } from "$lib/server/db/schema";
+import { createRequestSchema } from "./schema";
 
 export const POST: RequestHandler = async ({ locals, request }) => {
     checkAuthentication(locals.session.data);
@@ -10,7 +10,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     const json = await request.json();
     console.log(json);
 
-    const data = createItemSchema.safeParse(json);
+    const data = createRequestSchema.safeParse(json);
     if (!data.success) {
         return new Response(JSON.stringify({ error: data.error }), {
             status: 400,
@@ -19,27 +19,23 @@ export const POST: RequestHandler = async ({ locals, request }) => {
             }
         });
     }
-    const { name, price, quality, description, item_type, categories } =
-        data.data;
+    const { name, price, description, categories } = data.data;
 
-    const itemID = await db
+    const requestID = await db
         .transaction(async (tx) => {
-            const item = await tx
-                .insert(items)
+            const request = await tx
+                .insert(requests)
                 .values({
                     user_id: locals.session.data.id,
                     time_posted: new Date(),
                     time_expire: new Date(),
                     name,
                     price,
-                    quality,
-                    description,
-                    status: "active",
-                    item_type
+                    description
                 })
-                .returning({ id: items.id })
+                .returning({ id: requests.id })
                 .execute();
-            if (item.length === 0) {
+            if (request.length === 0) {
                 return new Response(
                     JSON.stringify({ error: "CREATION_ERROR" }),
                     {
@@ -54,14 +50,14 @@ export const POST: RequestHandler = async ({ locals, request }) => {
             // insert categories
             if (categories) {
                 const values = categories.map((category) => ({
-                    item_id: item[0].id,
+                    request_id: request[0].id,
                     category
                 }));
 
                 const success = await tx
-                    .insert(itemCategories)
+                    .insert(requestCategories)
                     .values(values)
-                    .returning({ id: itemCategories.id })
+                    .returning({ id: requestCategories.id })
                     .execute();
                 if (success.length !== values.length) {
                     return new Response(
@@ -76,7 +72,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
                 }
             }
 
-            return item[0].id;
+            return request[0].id;
         })
         .catch((e) => {
             console.error(e);
@@ -88,7 +84,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
             });
         });
 
-    return new Response(JSON.stringify({ id: itemID }), {
+    return new Response(JSON.stringify({ id: requestID }), {
         status: 200,
         headers: {
             "Content-Type": "application/json"

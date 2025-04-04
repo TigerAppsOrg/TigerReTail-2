@@ -11,7 +11,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     if (url.searchParams.has("limit")) {
         try {
             limit = parseInt(url.searchParams.get("limit")!);
-        } catch (e) {
+        } catch {
             return new Response(JSON.stringify({ error: "INVALID_LIMIT" }), {
                 status: 400,
                 headers: {
@@ -25,7 +25,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     if (url.searchParams.has("offset")) {
         try {
             offset = parseInt(url.searchParams.get("offset")!);
-        } catch (e) {
+        } catch {
             return new Response(JSON.stringify({ error: "INVALID_OFFSET" }), {
                 status: 400,
                 headers: {

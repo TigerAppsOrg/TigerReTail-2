@@ -1,13 +1,13 @@
 import { checkAuthentication } from "$lib/server/security/cas";
 import type { RequestHandler } from "@sveltejs/kit";
 import { db } from "$lib/server/db";
-import { itemImages } from "$lib/server/db/schema";
-import { createItemImageSchema } from "./schema";
+import { requestImages } from "$lib/server/db/schema";
+import { createRequestImageSchema } from "./schema";
 
 export const POST: RequestHandler = async ({ locals, request }) => {
     checkAuthentication(locals.session.data);
 
-    const data = createItemImageSchema.safeParse(await request.json());
+    const data = createRequestImageSchema.safeParse(await request.json());
     console.log(data);
     if (!data.success) {
         return new Response(JSON.stringify({ error: data.error }), {
@@ -17,17 +17,17 @@ export const POST: RequestHandler = async ({ locals, request }) => {
             }
         });
     }
-    const { item_id, url } = data.data;
+    const { request_id, url } = data.data;
 
     const imageID = await db
         .transaction(async (tx) => {
             const image = await tx
-                .insert(itemImages)
+                .insert(requestImages)
                 .values({
-                    item_id,
+                    request_id,
                     url
                 })
-                .returning({ id: itemImages.id })
+                .returning({ id: requestImages.id })
                 .execute();
             if (image.length === 0) {
                 return new Response(

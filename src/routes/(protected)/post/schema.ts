@@ -1,22 +1,16 @@
-import { CATEGORIES, QUALITIES } from "$lib";
+import { ZodCategory, ZodQuality } from "$lib";
 import { z } from "zod";
+import { ZodFile } from "../../api/items/createImage/schema";
 
-export const formSchema = z.object({
-    images: z.array(z.union([z.string(), z.instanceof(File)])).optional(),
+export const itemFormSchema = z.object({
+    images: z.array(ZodFile),
     name: z.string().min(1, "Name is required"),
-    description: z.string().min(1, "Description is required"),
     price: z.number().min(0, "Price must be a positive number"),
-    negotiable: z.boolean(), // Changed to enum for radio options
-    deadline: z.string().optional(),
-    category: z.enum(CATEGORIES, {
-        required_error: "Category is required"
-    }),
-    quality: z.enum(QUALITIES, {
-        required_error: "Condition is required"
-    })
+    quality: ZodQuality.optional(),
+    description: z.string().optional(),
+    // item_type: ZodItemType,
+    categories: z.array(ZodCategory)
 });
 
-export type FormSchema = typeof formSchema;
-export type FormData = z.infer<FormSchema>;
-
-// constants thtoughout, changes to db/index.ts,
+export type ItemFormSchema = typeof itemFormSchema;
+export type ItemFormData = z.infer<ItemFormSchema>;
