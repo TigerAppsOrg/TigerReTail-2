@@ -3,7 +3,7 @@
         DropdownMenu as DropdownMenuPrimitive,
         type WithoutChild
     } from "bits-ui";
-    import ChevronRight from "lucide-svelte/icons/chevron-right";
+    import ChevronRight from "@lucide/svelte/icons/chevron-right";
     import { cn } from "$lib/utils.js";
 
     let {
