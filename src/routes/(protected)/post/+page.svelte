@@ -11,6 +11,7 @@
     import { CATEGORIES, QUALITIES } from "$lib";
     import type { CreateItemState } from "../../api/items/create/schema";
     import type { CreateItemImageState } from "../../api/items/createImage/schema";
+    import type { CreateItemImageUrlState } from "../../api/items/createImageURL/schema";
 
     let { data } = $props();
 
@@ -54,9 +55,60 @@
         const responseJson = await response.json();
 
         for (const image of $form.images) {
+            // Get file type
+            const validTypes = ["image/jpeg", "image/png", "image/webp"];
+
+            if (!validTypes.includes(image.type)) {
+                console.error("Bad file type");
+                return;
+            }
+
+            const uuid = crypto.randomUUID();
+            const extension = image.type.split("/")[1];
+
+            const uploadLinkRequest: CreateItemImageUrlState = {
+                extension
+            };
+
+            let writeSignedUrl: string;
+            try {
+                const imageUrlResponse = await fetch(
+                    "/api/items/createImageURL",
+                    {
+                        method: "POST",
+                        body: JSON.stringify(uploadLinkRequest)
+                    }
+                );
+
+                if (!imageUrlResponse.ok) {
+                    console.error("Failed to upload image");
+                    return;
+                }
+                let json = await imageUrlResponse.json();
+                writeSignedUrl = json.writeSignedUrl;
+            } catch (error) {
+                console.error("Failed to upload image");
+                return;
+            }
+
+            const uploadResponse = await fetch(writeSignedUrl, {
+                method: "PUT",
+                body: image,
+                headers: {
+                    "Content-Type": image.type
+                }
+            });
+
+            if (!uploadResponse.ok) {
+                console.error("Failed to upload image");
+                return;
+            }
+
+            const uploadedImageUrl = writeSignedUrl.split("?")[0];
+
             const uploadData: CreateItemImageState = {
                 item_id: responseJson.id,
-                file: image
+                url: uploadedImageUrl
             };
 
             console.log(uploadData);
@@ -125,7 +177,7 @@
                             value={category}
                             id={`category-${category}`}
                             checked={$form.categories?.includes(category)}
-                            on:change={(e) => {
+                            onchange={(e) => {
                                 const checked = e.currentTarget.checked;
                                 if (
                                     checked &&
@@ -165,7 +217,7 @@
                 id="images"
                 accept="image/*"
                 multiple
-                on:change={(e) => {
+                onchange={(e) => {
                     const files = (e.target as HTMLInputElement).files;
                     if (files) {
                         $form.images = Array.from(files);
@@ -189,7 +241,7 @@
                             <button
                                 type="button"
                                 style="position: absolute; top: 0; right: 0;"
-                                on:click={() => {
+                                onclick={() => {
                                     $form.images = $form.images.filter(
                                         (_, index) => index !== i
                                     );
@@ -204,7 +256,7 @@
 
         <!-- Submit Button -->
         <div>
-            <button type="submit" on:click={uploadForm}> Submit </button>
+            <button type="submit" onclick={uploadForm}> Submit </button>
         </div>
     </div>
 </div>
