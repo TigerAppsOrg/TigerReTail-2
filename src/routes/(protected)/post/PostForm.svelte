@@ -1,17 +1,19 @@
 <script lang="ts">
-    import {
-        type Infer,
-        superForm,
-        type SuperValidated
-    } from "sveltekit-superforms";
-    import { zodClient } from "sveltekit-superforms/adapters";
     import { goto } from "$app/navigation";
-    import { itemFormSchema, type ItemFormSchema } from "./schema";
-    import { X } from "lucide-svelte";
     import { CATEGORIES, QUALITIES } from "$lib";
+    import DatePicker from "$lib/components/DatePicker.svelte";
+    import { Button } from "$lib/components/ui/button";
+    import Input from "$lib/components/ui/input/input.svelte";
+    import * as Select from "$lib/components/ui/select";
+    import Textarea from "$lib/components/ui/textarea/textarea.svelte";
+    import { fmtStr } from "$lib/utils";
+    import { X } from "lucide-svelte";
+    import { superForm } from "sveltekit-superforms";
+    import { zodClient } from "sveltekit-superforms/adapters";
+    import type { CreateImageUrlState } from "../../api/createImageURL/schema";
     import type { CreateItemState } from "../../api/items/create/schema";
     import type { CreateItemImageState } from "../../api/items/createImage/schema";
-    import type { CreateImageUrlState } from "../../api/createImageURL/schema";
+    import { itemFormSchema } from "./schema";
 
     let { data } = $props();
 
@@ -20,12 +22,13 @@
         dataType: "json"
     });
 
-    async function uploadForm() {
+    const uploadForm = async () => {
         const postData: CreateItemState = {
             name: $form.name,
             price: $form.price.toString(),
             quality: $form.quality,
             description: $form.description,
+            expirationDate: $form.expirationDate,
             item_type: "sell",
             categories: $form.categories
         };
@@ -122,86 +125,120 @@
         }
 
         goto("/home");
-    }
+    };
 </script>
 
-<div>
-    <!-- <h2>Item Post Form</h2>
-    <hr /> -->
-
-    <div>
-        <!-- Item Name -->
-        <div>
-            <label for="name">Item Name</label>
-            <input type="text" id="name" bind:value={$form.name} required />
+<div class="flex gap-4">
+    <section id="post-form" class="std-area flex-1">
+        <div class="-space-y-1 mb-6">
+            <h2 class="text-lg">Item Information</h2>
+            <p class="text-light text-sm">
+                Fill out the form below to create a new item listing.
+            </p>
         </div>
 
-        <!-- Price -->
-        <div>
-            <label for="price">Price ($)</label>
-            <input
-                type="number"
-                id="price"
-                bind:value={$form.price}
-                min="0"
-                step="0.01"
-                required />
-        </div>
+        <div class="space-y-4">
+            <div>
+                <label for="name">
+                    <span> Item Name </span>
+                    <span class="text-red-500">*</span>
+                </label>
+                <Input
+                    type="text"
+                    id="name"
+                    bind:value={$form.name}
+                    required
+                    class="w-full"
+                    placeholder="Enter item name" />
+            </div>
 
-        <!-- Quality -->
-        <div>
-            <label for="quality">Quality</label>
-            <select id="quality" bind:value={$form.quality} required>
-                <option value="" disabled selected>Select quality</option>
-                {#each QUALITIES as quality}
-                    <option value={quality}>{quality}</option>
-                {/each}
-            </select>
-        </div>
+            <div>
+                <label for="description">
+                    <span> Description </span>
+                    <span class="text-red-500">*</span>
+                </label>
+                <Textarea
+                    id="description"
+                    placeholder="Enter a quick description of the item"
+                    rows={4}
+                    bind:value={$form.description} />
+            </div>
 
-        <!-- Categories -->
-        <div>
-            <label id="categories-label" for="categories">Categories</label>
-            <div role="group" aria-labelledby="categories-label">
-                {#each CATEGORIES as category}
-                    <label>
-                        <input
-                            type="checkbox"
-                            value={category}
-                            id={`category-${category}`}
-                            checked={$form.categories?.includes(category)}
-                            onchange={(e) => {
-                                const checked = e.currentTarget.checked;
-                                if (
-                                    checked &&
-                                    !$form.categories.includes(category)
-                                ) {
-                                    $form.categories = [
-                                        ...$form.categories,
-                                        category
-                                    ];
-                                } else if (!checked) {
-                                    $form.categories = $form.categories.filter(
-                                        (cat: string) => cat !== category
-                                    );
-                                }
-                            }} />
-                        <span>{category}</span>
+            <div id="field-grid">
+                <div>
+                    <label for="price">
+                        <span> Price ($) </span>
+                        <span class="text-red-500">*</span>
                     </label>
-                {/each}
+                    <Input
+                        type="number"
+                        id="price"
+                        bind:value={$form.price}
+                        min="0"
+                        step="1"
+                        required
+                        class="w-full"
+                        placeholder="Enter item price" />
+                </div>
+
+                <div>
+                    <div>
+                        <span> Expiration Date </span>
+                        <span>
+                            <span class="text-red-500">*</span>
+                        </span>
+                    </div>
+                    <DatePicker bind:value={$form.expirationDate} />
+                </div>
+
+                <div>
+                    <div>
+                        <span> Quality </span>
+                        <span>
+                            <span class="text-red-500">*</span>
+                        </span>
+                    </div>
+                    <Select.Root type="single" bind:value={$form.quality}>
+                        <Select.Trigger class="w-full">
+                            {$form.quality
+                                ? fmtStr($form.quality)
+                                : "Select Quality"}
+                        </Select.Trigger>
+                        <Select.Content>
+                            {#each QUALITIES as quality}
+                                <Select.Item value={quality} label={quality}>
+                                    {fmtStr(quality)}
+                                </Select.Item>
+                            {/each}
+                        </Select.Content>
+                    </Select.Root>
+                </div>
+
+                <div>
+                    <div>
+                        <span> Categories </span>
+                        <span>
+                            <span class="text-red-500">*</span>
+                        </span>
+                    </div>
+                    <Select.Root type="multiple" bind:value={$form.categories}>
+                        <Select.Trigger class="w-full">
+                            {$form.categories.length} selected
+                        </Select.Trigger>
+                        <Select.Content>
+                            {#each CATEGORIES as category}
+                                <Select.Item value={category} label={category}>
+                                    {fmtStr(category)}
+                                </Select.Item>
+                            {/each}
+                        </Select.Content>
+                    </Select.Root>
+                </div>
             </div>
         </div>
+    </section>
 
-        <!-- Description -->
-        <div>
-            <label for="description">Description</label>
-            <textarea
-                id="description"
-                bind:value={$form.description}
-                rows="4"
-                required></textarea>
-        </div>
-
+    <section id="images">
         <!-- Image Upload -->
         <div>
             <label for="images">Upload Images</label>
@@ -218,7 +255,6 @@
                 }} />
         </div>
 
-        <!-- Image Preview -->
         <!-- Image Preview -->
         {#if $form.images && $form.images.length > 0}
             <div>
@@ -246,10 +282,16 @@
                 </div>
             </div>
         {/if}
-
-        <!-- Submit Button -->
-        <div>
-            <button type="submit" onclick={uploadForm}> Submit </button>
-        </div>
-    </div>
+    </section>
 </div>
+
+<!-- Submit Button -->
+<div class="w-full flex justify-end mt-6">
+    <Button size="lg" type="submit" onclick={uploadForm}>Post Item</Button>
+</div>
+
+<style lang="postcss">
+    #field-grid {
+        @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+    }
+</style>

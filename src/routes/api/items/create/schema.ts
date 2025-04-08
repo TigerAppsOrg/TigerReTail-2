@@ -7,6 +7,7 @@ export const createItemSchema = z.object({
     quality: ZodQuality.optional(),
     description: z.string().optional(),
     item_type: ZodItemType,
+    expirationDate: z.date(),
     categories: z.array(ZodCategory)
 });
 

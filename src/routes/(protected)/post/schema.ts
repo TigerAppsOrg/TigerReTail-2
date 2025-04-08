@@ -8,6 +8,7 @@ export const itemFormSchema = z.object({
     price: z.number().min(0, "Price must be a positive number"),
     quality: ZodQuality.optional(),
     description: z.string().optional(),
+    expirationDate: z.date(),
     // item_type: ZodItemType,
     categories: z.array(ZodCategory)
 });
@@ -20,7 +21,8 @@ export const requestFormSchema = z.object({
     name: z.string(),
     price: z.string(),
     description: z.string().optional(),
-    categories: z.array(ZodCategory)
+    categories: z.array(ZodCategory),
+    expirationDate: z.date()
 });
 
 export type RequestFormSchema = typeof requestFormSchema;

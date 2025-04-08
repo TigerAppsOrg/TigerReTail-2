@@ -19,7 +19,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
             }
         });
     }
-    const { name, price, description, categories } = data.data;
+    const { name, price, description, categories, expirationDate } = data.data;
 
     const requestID = await db
         .transaction(async (tx) => {
@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
                 .values({
                     user_id: locals.session.data.id,
                     time_posted: new Date(),
-                    time_expire: new Date(),
+                    time_expire: expirationDate,
                     name,
                     price,
                     description
