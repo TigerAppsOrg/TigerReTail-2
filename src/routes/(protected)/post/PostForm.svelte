@@ -11,6 +11,7 @@
     import { Button } from "$lib/components/ui/button";
     import Input from "$lib/components/ui/input/input.svelte";
     import Textarea from "$lib/components/ui/textarea/textarea.svelte";
+    import DatePicker from "$lib/components/DatePicker.svelte";
 
     let { data } = $props();
 
@@ -213,15 +214,9 @@
                         required />
                 </div>
 
-                <div id="price">
-                    <label for="price">Price ($)</label>
-                    <input
-                        type="number"
-                        id="price"
-                        bind:value={$form.price}
-                        min="0"
-                        step="0.01"
-                        required />
+                <div>
+                    <label> Expiration Date </label>
+                    <DatePicker />
                 </div>
 
                 <div id="quality">
@@ -283,6 +278,6 @@
 
 <style lang="postcss">
     #field-grid {
-        @apply grid grid-cols-1 sm:grid-cols-2;
+        @apply grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2;
     }
 </style>
