@@ -2,7 +2,7 @@
     import BackToHome from "$lib/components/BackToHome.svelte";
     import { Button } from "$lib/components/ui/button";
     import { CirclePlus, MessageCircleQuestion } from "lucide-svelte";
-    import ItemForm from "./ItemForm.svelte";
+    import PostForm from "./PostForm.svelte";
     import RequestForm from "./RequestForm.svelte";
 
     let { data } = $props();
@@ -28,7 +28,7 @@
     </nav>
     <div>
         {#if isPost}
-            <ItemForm {data} />
+            <PostForm {data} />
         {:else}
             <RequestForm {data} />
         {/if}
