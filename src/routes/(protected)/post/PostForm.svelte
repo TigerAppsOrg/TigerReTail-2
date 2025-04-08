@@ -12,6 +12,7 @@
     import Input from "$lib/components/ui/input/input.svelte";
     import Textarea from "$lib/components/ui/textarea/textarea.svelte";
     import DatePicker from "$lib/components/DatePicker.svelte";
+    import * as Select from "$lib/components/ui/select";
 
     let { data } = $props();
 
@@ -124,6 +125,12 @@
 
         goto("/home");
     };
+
+    const fmtStr = (str: string) =>
+        str
+            .split(" ")
+            .map((x: string) => x[0].toUpperCase() + x.slice(1))
+            .join(" ");
 </script>
 
 <div class="flex gap-4">
@@ -172,7 +179,7 @@
             </div>
         {/if}
     </section>
-    <section id="post-form" class="std-area">
+    <section id="post-form" class="std-area flex-1">
         <div class="-space-y-1 mb-6">
             <h2 class="text-lg">Item Information</h2>
             <p class="text-light text-sm">
@@ -230,52 +237,50 @@
                     <DatePicker bind:value={$form.expirationDate} />
                 </div>
 
-                <div id="quality">
-                    <label for="quality">Quality</label>
-                    <select id="quality" bind:value={$form.quality} required>
-                        <option value="" disabled selected
-                            >Select quality</option>
-                        {#each QUALITIES as quality}
-                            <option value={quality}>{quality}</option>
-                        {/each}
-                    </select>
+                <div>
+                    <div>
+                        <span> Quality </span>
+                        <span>
+                            <span class="text-red-500">*</span>
+                        </span>
+                    </div>
+                    <Select.Root type="single" bind:value={$form.quality}>
+                        <Select.Trigger class="w-full">
+                            {$form.quality
+                                ? fmtStr($form.quality)
+                                : "Select Quality"}
+                        </Select.Trigger>
+                        <Select.Content>
+                            {#each QUALITIES as quality}
+                                <Select.Item value={quality} label="quality">
+                                    {fmtStr(quality)}
+                                </Select.Item>
+                            {/each}
+                        </Select.Content>
+                    </Select.Root>
                 </div>
 
-                <div id="categories">
-                    <label id="categories-label" for="categories"
-                        >Categories</label>
-                    <div role="group" aria-labelledby="categories-label">
-                        {#each CATEGORIES as category}
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value={category}
-                                    id={`category-${category}`}
-                                    checked={$form.categories?.includes(
-                                        category
-                                    )}
-                                    onchange={(e) => {
-                                        const checked = e.currentTarget.checked;
-                                        if (
-                                            checked &&
-                                            !$form.categories.includes(category)
-                                        ) {
-                                            $form.categories = [
-                                                ...$form.categories,
-                                                category
-                                            ];
-                                        } else if (!checked) {
-                                            $form.categories =
-                                                $form.categories.filter(
-                                                    (cat: string) =>
-                                                        cat !== category
-                                                );
-                                        }
-                                    }} />
-                                <span>{category}</span>
-                            </label>
-                        {/each}
+                <div>
+                    <div>
+                        <span> Categories </span>
+                        <span>
+                            <span class="text-red-500">*</span>
+                        </span>
                     </div>
+                    <Select.Root type="single" bind:value={$form.quality}>
+                        <Select.Trigger class="w-full">
+                            {$form.quality
+                                ? fmtStr($form.quality)
+                                : "Select Quality"}
+                        </Select.Trigger>
+                        <Select.Content>
+                            {#each QUALITIES as quality}
+                                <Select.Item value={quality} label="quality">
+                                    {fmtStr(quality)}
+                                </Select.Item>
+                            {/each}
+                        </Select.Content>
+                    </Select.Root>
                 </div>
             </div>
         </div>
@@ -289,6 +294,6 @@
 
 <style lang="postcss">
     #field-grid {
-        @apply grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2;
+        @apply grid grid-cols-1 md:grid-cols-2 gap-4;
     }
 </style>
