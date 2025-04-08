@@ -27,7 +27,8 @@
             name: $form.name,
             price: $form.price,
             description: $form.description || "",
-            categories: $form.categories
+            categories: $form.categories,
+            expirationDate: $form.expirationDate
         };
 
         let response;

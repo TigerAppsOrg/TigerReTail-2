@@ -21,7 +21,8 @@ export const requestFormSchema = z.object({
     name: z.string(),
     price: z.string(),
     description: z.string().optional(),
-    categories: z.array(ZodCategory)
+    categories: z.array(ZodCategory),
+    expirationDate: z.date()
 });
 
 export type RequestFormSchema = typeof requestFormSchema;
