@@ -134,51 +134,6 @@
 </script>
 
 <div class="flex gap-4">
-    <section id="images">
-        <!-- Image Upload -->
-        <div>
-            <label for="images">Upload Images</label>
-            <input
-                type="file"
-                id="images"
-                accept="image/*"
-                multiple
-                onchange={(e) => {
-                    const files = (e.target as HTMLInputElement).files;
-                    if (files) {
-                        $form.images = Array.from(files);
-                    }
-                }} />
-        </div>
-
-        <!-- Image Preview -->
-        {#if $form.images && $form.images.length > 0}
-            <div>
-                <span id="image-previews-label">Image Previews</span>
-                <div role="group" aria-labelledby="image-previews-label">
-                    {#each $form.images as image, i}
-                        <div
-                            style="position: relative; display: inline-block; margin: 5px;">
-                            <img
-                                src={URL.createObjectURL(image)}
-                                alt="Preview"
-                                style="max-width: 100px; max-height: 100px;" />
-                            <button
-                                type="button"
-                                style="position: absolute; top: 0; right: 0;"
-                                onclick={() => {
-                                    $form.images = $form.images.filter(
-                                        (_: any, index: number) => index !== i
-                                    );
-                                }}>
-                                <X size={16} />
-                            </button>
-                        </div>
-                    {/each}
-                </div>
-            </div>
-        {/if}
-    </section>
     <section id="post-form" class="std-area flex-1">
         <div class="-space-y-1 mb-6">
             <h2 class="text-lg">Item Information</h2>
@@ -282,6 +237,52 @@
                 </div>
             </div>
         </div>
+    </section>
+
+    <section id="images">
+        <!-- Image Upload -->
+        <div>
+            <label for="images">Upload Images</label>
+            <input
+                type="file"
+                id="images"
+                accept="image/*"
+                multiple
+                onchange={(e) => {
+                    const files = (e.target as HTMLInputElement).files;
+                    if (files) {
+                        $form.images = Array.from(files);
+                    }
+                }} />
+        </div>
+
+        <!-- Image Preview -->
+        {#if $form.images && $form.images.length > 0}
+            <div>
+                <span id="image-previews-label">Image Previews</span>
+                <div role="group" aria-labelledby="image-previews-label">
+                    {#each $form.images as image, i}
+                        <div
+                            style="position: relative; display: inline-block; margin: 5px;">
+                            <img
+                                src={URL.createObjectURL(image)}
+                                alt="Preview"
+                                style="max-width: 100px; max-height: 100px;" />
+                            <button
+                                type="button"
+                                style="position: absolute; top: 0; right: 0;"
+                                onclick={() => {
+                                    $form.images = $form.images.filter(
+                                        (_: any, index: number) => index !== i
+                                    );
+                                }}>
+                                <X size={16} />
+                            </button>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        {/if}
     </section>
 </div>
 
