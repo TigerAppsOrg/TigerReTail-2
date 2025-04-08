@@ -143,7 +143,7 @@
         <div class="space-y-4">
             <div>
                 <label for="name">
-                    <span> Name </span>
+                    <span> Item Name </span>
                     <span class="text-red-500">*</span>
                 </label>
                 <Input
@@ -157,10 +157,13 @@
 
             <div>
                 <label for="description">
-                    <span> Description </span>
+                    <span> Details </span>
                     <span class="text-red-500">*</span>
                 </label>
-                <Textarea id="description" bind:value={$form.description} />
+                <Textarea
+                    id="description"
+                    placeholder="Enter a detailed description of the item"
+                    bind:value={$form.description} />
             </div>
 
             <div id="field-grid">
