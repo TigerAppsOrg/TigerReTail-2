@@ -1,5 +1,3 @@
-// place files you want to import through the `$lib` alias in this folder.
-
 import { z } from "zod";
 
 // weird Array<String> types to be used for database types as well

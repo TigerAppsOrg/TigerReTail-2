@@ -1,6 +1,12 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { CATEGORIES, QUALITIES } from "$lib";
+    import DatePicker from "$lib/components/DatePicker.svelte";
+    import { Button } from "$lib/components/ui/button";
+    import Input from "$lib/components/ui/input/input.svelte";
+    import * as Select from "$lib/components/ui/select";
+    import Textarea from "$lib/components/ui/textarea/textarea.svelte";
+    import { fmtStr } from "$lib/utils";
     import { X } from "lucide-svelte";
     import { superForm } from "sveltekit-superforms";
     import { zodClient } from "sveltekit-superforms/adapters";
@@ -8,11 +14,6 @@
     import type { CreateItemState } from "../../api/items/create/schema";
     import type { CreateItemImageState } from "../../api/items/createImage/schema";
     import { itemFormSchema } from "./schema";
-    import { Button } from "$lib/components/ui/button";
-    import Input from "$lib/components/ui/input/input.svelte";
-    import Textarea from "$lib/components/ui/textarea/textarea.svelte";
-    import DatePicker from "$lib/components/DatePicker.svelte";
-    import * as Select from "$lib/components/ui/select";
 
     let { data } = $props();
 
@@ -125,12 +126,6 @@
 
         goto("/home");
     };
-
-    const fmtStr = (str: string) =>
-        str
-            .split(" ")
-            .map((x: string) => x[0].toUpperCase() + x.slice(1))
-            .join(" ");
 </script>
 
 <div class="flex gap-4">
@@ -165,6 +160,7 @@
                 <Textarea
                     id="description"
                     placeholder="Enter a quick description of the item"
+                    rows={4}
                     bind:value={$form.description} />
             </div>
 
