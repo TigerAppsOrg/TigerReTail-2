@@ -101,3 +101,7 @@ body {
 .text-light {
     @apply text-gray-600 dark:text-gray-300;
 }
+
+.std-area {
+    @apply rounded-lg border border-std p-6 shadow-sm;
+}

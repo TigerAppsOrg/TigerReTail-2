@@ -11,16 +11,16 @@
 
 <BackToHome pageTitle={isPost ? "New Post" : "New Request"} mb={8} />
 <div class="cont">
-    <nav class="flex items-center gap-4 mb-4">
+    <nav class="flex items-center gap-4 mb-6">
         <Button
-            variant={isPost ? "default" : "secondary"}
+            variant={isPost ? "secondary" : "ghost"}
             class="flex-1"
             onclick={() => (isPost = true)}>
             <CirclePlus class="mr-2" />
             Post Item
         </Button>
         <Button
-            variant={!isPost ? "default" : "secondary"}
+            variant={!isPost ? "secondary" : "ghost"}
             class="flex-1"
             onclick={() => (isPost = false)}>
             <MessageCircleQuestion class="mr-2" />

@@ -39,7 +39,7 @@
     );
 </script>
 
-<section class="w-full rounded-lg border border-std p-6 shadow-sm">
+<section class="w-full std-area">
     <div class="w-full">
         <div class="mb-6 flex items-center justify-between">
             <span class="text-lg">Profile Info</span>
