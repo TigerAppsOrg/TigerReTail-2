@@ -288,7 +288,7 @@
 
 <!-- Submit Button -->
 <div class="w-full flex justify-end mt-6">
-    <Button size="lg" type="submit" onclick={uploadForm}>Submit</Button>
+    <Button size="lg" type="submit" onclick={uploadForm}>Post Item</Button>
 </div>
 
 <style lang="postcss">

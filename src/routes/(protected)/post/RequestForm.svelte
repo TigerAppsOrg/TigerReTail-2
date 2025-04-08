@@ -8,6 +8,11 @@
     import type { CreateRequestState } from "../../api/requests/create/schema";
     import type { CreateRequestImageState } from "../../api/requests/createImage/schema";
     import { requestFormSchema } from "./schema";
+    import { Input } from "$lib/components/ui/input";
+    import * as Select from "$lib/components/ui/select";
+    import { Textarea } from "$lib/components/ui/textarea";
+    import DatePicker from "$lib/components/DatePicker.svelte";
+    import Button from "$lib/components/ui/button/button.svelte";
 
     let { data } = $props();
 
@@ -117,74 +122,97 @@
 
         goto("/home");
     };
+
+    const fmtStr = (str: string) =>
+        str
+            .split(" ")
+            .map((x: string) => x[0].toUpperCase() + x.slice(1))
+            .join(" ");
 </script>
 
-<div>
-    <!-- <h2>Item Request Form</h2>
-    <hr /> -->
-
-    <div>
-        <!-- Item Name -->
-        <div>
-            <label for="name">What are you looking for?</label>
-            <input type="text" id="name" bind:value={$form.name} required />
+<div class="flex gap-4">
+    <section id="request-form" class="std-area flex-1">
+        <div class="-space-y-1 mb-6">
+            <h2 class="text-lg">Request Information</h2>
+            <p class="text-light text-sm">
+                Fill out the form below to request an item. Please be as
+                specific as possible.
+            </p>
         </div>
 
-        <!-- Price -->
-        <div>
-            <label for="price">Budget ($)</label>
-            <input
-                type="text"
-                id="price"
-                bind:value={$form.price}
-                placeholder="e.g. $20-50 or 'Any'"
-                required />
-        </div>
+        <div class="space-y-4">
+            <div>
+                <label for="name">
+                    <span> Name </span>
+                    <span class="text-red-500">*</span>
+                </label>
+                <Input
+                    type="text"
+                    id="name"
+                    bind:value={$form.name}
+                    required
+                    class="w-full"
+                    placeholder="Enter item name" />
+            </div>
 
-        <!-- Categories -->
-        <div>
-            <label id="categories-label" for="categories">Categories</label>
-            <div role="group" aria-labelledby="categories-label">
-                {#each CATEGORIES as category}
-                    <label>
-                        <input
-                            type="checkbox"
-                            value={category}
-                            id={`category-${category}`}
-                            checked={$form.categories?.includes(category)}
-                            onchange={(e) => {
-                                const checked = e.currentTarget.checked;
-                                if (
-                                    checked &&
-                                    !$form.categories.includes(category)
-                                ) {
-                                    $form.categories = [
-                                        ...$form.categories,
-                                        category
-                                    ];
-                                } else if (!checked) {
-                                    $form.categories = $form.categories.filter(
-                                        (cat: string) => cat !== category
-                                    );
-                                }
-                            }} />
-                        <span>{category}</span>
+            <div>
+                <label for="description">
+                    <span> Description </span>
+                    <span class="text-red-500">*</span>
+                </label>
+                <Textarea id="description" bind:value={$form.description} />
+            </div>
+
+            <div id="field-grid">
+                <div>
+                    <label for="price">
+                        <span> Budget </span>
+                        <span class="text-red-500">*</span>
                     </label>
-                {/each}
+                    <Input
+                        type="text"
+                        id="price"
+                        bind:value={$form.price}
+                        required
+                        class="w-full"
+                        placeholder="e.g. $20-50 or 'Any'" />
+                </div>
+
+                <div>
+                    <div>
+                        <span> Expiration Date </span>
+                        <span>
+                            <span class="text-red-500">*</span>
+                        </span>
+                    </div>
+                    <DatePicker bind:value={$form.expirationDate} />
+                </div>
+
+                <div>
+                    <div>
+                        <span> Categories </span>
+                        <span>
+                            <span class="text-red-500">*</span>
+                        </span>
+                    </div>
+                    <Select.Root type="multiple" bind:value={$form.categories}>
+                        <Select.Trigger class="w-full">
+                            {$form.categories.length} selected
+                        </Select.Trigger>
+                        <Select.Content>
+                            {#each CATEGORIES as category}
+                                <Select.Item value={category} label={category}>
+                                    {fmtStr(category)}
+                                </Select.Item>
+                            {/each}
+                        </Select.Content>
+                    </Select.Root>
+                </div>
             </div>
         </div>
+    </section>
 
-        <!-- Description -->
-        <div>
-            <label for="description">Details (optional)</label>
-            <textarea
-                id="description"
-                bind:value={$form.description}
-                rows="4"
-                placeholder="Provide any additional details about what you're looking for"
-            ></textarea>
-        </div>
-
+    <section>
         <!-- Image Upload -->
         <div>
             <label for="images">Upload Reference Images (optional)</label>
@@ -228,10 +256,16 @@
                 </div>
             </div>
         {/if}
-
-        <!-- Submit Button -->
-        <div>
-            <button type="submit" onclick={uploadForm}>Submit Request</button>
-        </div>
-    </div>
+    </section>
 </div>
+
+<!-- Submit Button -->
+<div class="w-full flex justify-end mt-6">
+    <Button size="lg" type="submit" onclick={uploadForm}>Post Request</Button>
+</div>
+
+<style lang="postcss">
+    #field-grid {
+        @apply grid grid-cols-1 lg:grid-cols-3 gap-4;
+    }
+</style>
