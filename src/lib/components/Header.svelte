@@ -24,7 +24,7 @@
         <div class="flex items-center space-x-4">
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <Button variant="ghost" class="flex items-center space-x-1">
+                    <Button variant="ghost" class="flex items-center">
                         <UserIcon class="size-5" />
                         <span> Profile </span>
                     </Button>
@@ -43,7 +43,7 @@
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button href="/post" class="space-x-1">
+            <Button href="/post">
                 <PlusIcon class="size-5" />
                 <span> Post </span>
             </Button>
