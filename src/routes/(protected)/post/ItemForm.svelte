@@ -11,17 +11,16 @@
     import { CATEGORIES, QUALITIES } from "$lib";
     import type { CreateItemState } from "../../api/items/create/schema";
     import type { CreateItemImageState } from "../../api/items/createImage/schema";
-    import type { CreateItemImageUrlState } from "../../api/createImageURL/schema";
+    import type { CreateImageUrlState } from "../../api/createImageURL/schema";
 
     let { data } = $props();
 
-    const { form, enhance } = superForm(data.form, {
+    const { form, enhance } = superForm(data.itemForm, {
         validators: zodClient(itemFormSchema),
         dataType: "json"
     });
 
     async function uploadForm() {
-        console.log($form);
         const postData: CreateItemState = {
             name: $form.name,
             price: $form.price.toString(),
@@ -30,8 +29,6 @@
             item_type: "sell",
             categories: $form.categories
         };
-
-        console.log(postData);
 
         let response;
         try {
@@ -66,7 +63,7 @@
             const uuid = crypto.randomUUID();
             const extension = image.type.split("/")[1];
 
-            const uploadLinkRequest: CreateItemImageUrlState = {
+            const uploadLinkRequest: CreateImageUrlState = {
                 extension
             };
 
@@ -108,7 +105,6 @@
                 url: uploadedImageUrl
             };
 
-            console.log(uploadData);
             try {
                 const imageResponse = await fetch("/api/items/createImage", {
                     method: "POST",
@@ -130,8 +126,8 @@
 </script>
 
 <div>
-    <h2>Item Post Form</h2>
-    <hr />
+    <!-- <h2>Item Post Form</h2>
+    <hr /> -->
 
     <div>
         <!-- Item Name -->

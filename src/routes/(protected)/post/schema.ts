@@ -14,3 +14,14 @@ export const itemFormSchema = z.object({
 
 export type ItemFormSchema = typeof itemFormSchema;
 export type ItemFormData = z.infer<ItemFormSchema>;
+
+export const requestFormSchema = z.object({
+    images: z.array(ZodFile),
+    name: z.string(),
+    price: z.string(),
+    description: z.string().optional(),
+    categories: z.array(ZodCategory)
+});
+
+export type RequestFormSchema = typeof requestFormSchema;
+export type RequestFormData = z.infer<RequestFormSchema>;
