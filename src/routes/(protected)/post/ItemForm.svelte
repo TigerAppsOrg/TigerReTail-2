@@ -1,17 +1,13 @@
 <script lang="ts">
-    import {
-        type Infer,
-        superForm,
-        type SuperValidated
-    } from "sveltekit-superforms";
-    import { zodClient } from "sveltekit-superforms/adapters";
     import { goto } from "$app/navigation";
-    import { itemFormSchema, type ItemFormSchema } from "./schema";
-    import { X } from "lucide-svelte";
     import { CATEGORIES, QUALITIES } from "$lib";
+    import { X } from "lucide-svelte";
+    import { superForm } from "sveltekit-superforms";
+    import { zodClient } from "sveltekit-superforms/adapters";
+    import type { CreateImageUrlState } from "../../api/createImageURL/schema";
     import type { CreateItemState } from "../../api/items/create/schema";
     import type { CreateItemImageState } from "../../api/items/createImage/schema";
-    import type { CreateImageUrlState } from "../../api/createImageURL/schema";
+    import { itemFormSchema } from "./schema";
 
     let { data } = $props();
 
@@ -20,7 +16,7 @@
         dataType: "json"
     });
 
-    async function uploadForm() {
+    const uploadForm = async () => {
         const postData: CreateItemState = {
             name: $form.name,
             price: $form.price.toString(),
@@ -122,7 +118,7 @@
         }
 
         goto("/home");
-    }
+    };
 </script>
 
 <div>

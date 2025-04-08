@@ -3,7 +3,6 @@
     import RequestForm from "./RequestForm.svelte";
 
     let { data } = $props();
-
     let posting = $state(true);
 </script>
 
@@ -11,13 +10,13 @@
 <div class="flex justify-center gap-4">
     <button
         class="btn btn-primary"
-        on:click={() => (posting = true)}
+        onclick={() => (posting = true)}
         class:active={posting}>
         Post Item
     </button>
     <button
         class="btn btn-primary"
-        on:click={() => (posting = false)}
+        onclick={() => (posting = false)}
         class:active={!posting}>
         Request Item
     </button>
