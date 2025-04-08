@@ -97,3 +97,7 @@ body {
 .border-std {
     @apply border-gray-300 dark:border-gray-600;
 }
+
+.text-light {
+    @apply text-gray-600 dark:text-gray-300;
+}

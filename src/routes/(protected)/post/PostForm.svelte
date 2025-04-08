@@ -8,6 +8,7 @@
     import type { CreateItemState } from "../../api/items/create/schema";
     import type { CreateItemImageState } from "../../api/items/createImage/schema";
     import { itemFormSchema } from "./schema";
+    import { Button } from "$lib/components/ui/button";
 
     let { data } = $props();
 
@@ -121,83 +122,8 @@
     };
 </script>
 
-<div>
-    <!-- <h2>Item Post Form</h2>
-    <hr /> -->
-
-    <div>
-        <!-- Item Name -->
-        <div>
-            <label for="name">Item Name</label>
-            <input type="text" id="name" bind:value={$form.name} required />
-        </div>
-
-        <!-- Price -->
-        <div>
-            <label for="price">Price ($)</label>
-            <input
-                type="number"
-                id="price"
-                bind:value={$form.price}
-                min="0"
-                step="0.01"
-                required />
-        </div>
-
-        <!-- Quality -->
-        <div>
-            <label for="quality">Quality</label>
-            <select id="quality" bind:value={$form.quality} required>
-                <option value="" disabled selected>Select quality</option>
-                {#each QUALITIES as quality}
-                    <option value={quality}>{quality}</option>
-                {/each}
-            </select>
-        </div>
-
-        <!-- Categories -->
-        <div>
-            <label id="categories-label" for="categories">Categories</label>
-            <div role="group" aria-labelledby="categories-label">
-                {#each CATEGORIES as category}
-                    <label>
-                        <input
-                            type="checkbox"
-                            value={category}
-                            id={`category-${category}`}
-                            checked={$form.categories?.includes(category)}
-                            onchange={(e) => {
-                                const checked = e.currentTarget.checked;
-                                if (
-                                    checked &&
-                                    !$form.categories.includes(category)
-                                ) {
-                                    $form.categories = [
-                                        ...$form.categories,
-                                        category
-                                    ];
-                                } else if (!checked) {
-                                    $form.categories = $form.categories.filter(
-                                        (cat: string) => cat !== category
-                                    );
-                                }
-                            }} />
-                        <span>{category}</span>
-                    </label>
-                {/each}
-            </div>
-        </div>
-
-        <!-- Description -->
-        <div>
-            <label for="description">Description</label>
-            <textarea
-                id="description"
-                bind:value={$form.description}
-                rows="4"
-                required></textarea>
-        </div>
-
+<div class="flex gap-4">
+    <section id="images">
         <!-- Image Upload -->
         <div>
             <label for="images">Upload Images</label>
@@ -214,7 +140,6 @@
                 }} />
         </div>
 
-        <!-- Image Preview -->
         <!-- Image Preview -->
         {#if $form.images && $form.images.length > 0}
             <div>
@@ -242,10 +167,100 @@
                 </div>
             </div>
         {/if}
-
-        <!-- Submit Button -->
-        <div>
-            <button type="submit" onclick={uploadForm}> Submit </button>
+    </section>
+    <section id="post-form">
+        <div class="-space-y-1">
+            <h2 class="text-lg">Item Information</h2>
+            <p class="text-light text-sm">
+                Fill out the form below to create a new item listing.
+            </p>
         </div>
-    </div>
+
+        <div id="name">
+            <label for="name">Item Name</label>
+            <input type="text" id="name" bind:value={$form.name} required />
+        </div>
+
+        <div id="description">
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                bind:value={$form.description}
+                rows="4"
+                required></textarea>
+        </div>
+
+        <div id="field-grid">
+            <div id="price">
+                <label for="price">Price ($)</label>
+                <input
+                    type="number"
+                    id="price"
+                    bind:value={$form.price}
+                    min="0"
+                    step="0.01"
+                    required />
+            </div>
+
+            <div id="price">
+                <label for="price">Price ($)</label>
+                <input
+                    type="number"
+                    id="price"
+                    bind:value={$form.price}
+                    min="0"
+                    step="0.01"
+                    required />
+            </div>
+
+            <div id="quality">
+                <label for="quality">Quality</label>
+                <select id="quality" bind:value={$form.quality} required>
+                    <option value="" disabled selected>Select quality</option>
+                    {#each QUALITIES as quality}
+                        <option value={quality}>{quality}</option>
+                    {/each}
+                </select>
+            </div>
+
+            <div id="categories">
+                <label id="categories-label" for="categories">Categories</label>
+                <div role="group" aria-labelledby="categories-label">
+                    {#each CATEGORIES as category}
+                        <label>
+                            <input
+                                type="checkbox"
+                                value={category}
+                                id={`category-${category}`}
+                                checked={$form.categories?.includes(category)}
+                                onchange={(e) => {
+                                    const checked = e.currentTarget.checked;
+                                    if (
+                                        checked &&
+                                        !$form.categories.includes(category)
+                                    ) {
+                                        $form.categories = [
+                                            ...$form.categories,
+                                            category
+                                        ];
+                                    } else if (!checked) {
+                                        $form.categories =
+                                            $form.categories.filter(
+                                                (cat: string) =>
+                                                    cat !== category
+                                            );
+                                    }
+                                }} />
+                            <span>{category}</span>
+                        </label>
+                    {/each}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Submit Button -->
+<div class="w-full flex justify-end">
+    <Button type="submit" onclick={uploadForm}>Submit</Button>
 </div>
