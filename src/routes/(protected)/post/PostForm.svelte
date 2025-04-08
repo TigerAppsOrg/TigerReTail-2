@@ -26,6 +26,7 @@
             price: $form.price.toString(),
             quality: $form.quality,
             description: $form.description,
+            expirationDate: $form.expirationDate,
             item_type: "sell",
             categories: $form.categories
         };
@@ -203,20 +204,30 @@
             </div>
 
             <div id="field-grid">
-                <div id="price">
-                    <label for="price">Price ($)</label>
-                    <input
+                <div>
+                    <label for="price">
+                        <span> Price ($) </span>
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <Input
                         type="number"
                         id="price"
                         bind:value={$form.price}
                         min="0"
-                        step="0.01"
-                        required />
+                        step="1"
+                        required
+                        class="w-full"
+                        placeholder="Enter item price" />
                 </div>
 
                 <div>
-                    <label> Expiration Date </label>
-                    <DatePicker />
+                    <div>
+                        <span> Expiration Date </span>
+                        <span>
+                            <span class="text-red-500">*</span>
+                        </span>
+                    </div>
+                    <DatePicker bind:value={$form.expirationDate} />
                 </div>
 
                 <div id="quality">

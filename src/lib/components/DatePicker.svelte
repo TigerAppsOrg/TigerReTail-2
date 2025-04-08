@@ -1,31 +1,36 @@
 <script lang="ts">
-    import CalendarIcon from "@lucide/svelte/icons/calendar";
+    import { buttonVariants } from "$lib/components/ui/button/index.js";
+    import { Calendar } from "$lib/components/ui/calendar/index.js";
+    import * as Popover from "$lib/components/ui/popover/index.js";
+    import * as Select from "$lib/components/ui/select/index.js";
+    import { cn } from "$lib/utils.js";
     import {
         DateFormatter,
         type DateValue,
         getLocalTimeZone,
         today
     } from "@internationalized/date";
-    import { cn } from "$lib/utils.js";
-    import { buttonVariants } from "$lib/components/ui/button/index.js";
-    import { Calendar } from "$lib/components/ui/calendar/index.js";
-    import * as Popover from "$lib/components/ui/popover/index.js";
-    import * as Select from "$lib/components/ui/select/index.js";
+    import CalendarIcon from "@lucide/svelte/icons/calendar";
+
+    interface Props {
+        value: DateValue | undefined;
+    }
+
+    let { value = $bindable() }: Props = $props();
 
     const df = new DateFormatter("en-US", {
         dateStyle: "long"
     });
 
-    let value: DateValue | undefined = $state();
     const valueString = $derived(
         value ? df.format(value.toDate(getLocalTimeZone())) : ""
     );
 
     const items = [
-        { value: 0, label: "Today" },
         { value: 1, label: "Tomorrow" },
-        { value: 3, label: "In 3 days" },
-        { value: 7, label: "In a week" }
+        { value: 7, label: "In a week" },
+        { value: 30, label: "In a month" },
+        { value: 182, label: "In 6 months" }
     ];
 </script>
 
@@ -34,7 +39,7 @@
         class={cn(
             buttonVariants({
                 variant: "outline",
-                class: "w-[280px] justify-start text-left font-normal"
+                class: "w-full justify-start text-left font-normal"
             }),
             !value && "text-muted-foreground"
         )}>
