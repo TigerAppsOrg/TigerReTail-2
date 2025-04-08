@@ -252,7 +252,7 @@
                         </Select.Trigger>
                         <Select.Content>
                             {#each QUALITIES as quality}
-                                <Select.Item value={quality} label="quality">
+                                <Select.Item value={quality} label={quality}>
                                     {fmtStr(quality)}
                                 </Select.Item>
                             {/each}
@@ -267,16 +267,14 @@
                             <span class="text-red-500">*</span>
                         </span>
                     </div>
-                    <Select.Root type="single" bind:value={$form.quality}>
+                    <Select.Root type="multiple" bind:value={$form.categories}>
                         <Select.Trigger class="w-full">
-                            {$form.quality
-                                ? fmtStr($form.quality)
-                                : "Select Quality"}
+                            {$form.categories.length} selected
                         </Select.Trigger>
                         <Select.Content>
-                            {#each QUALITIES as quality}
-                                <Select.Item value={quality} label="quality">
-                                    {fmtStr(quality)}
+                            {#each CATEGORIES as category}
+                                <Select.Item value={category} label={category}>
+                                    {fmtStr(category)}
                                 </Select.Item>
                             {/each}
                         </Select.Content>
