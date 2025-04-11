@@ -1,18 +1,32 @@
 <script lang="ts">
-    import { Button } from "$lib/components/ui/button";
     import { Input } from "$lib/components/ui/input/index.js";
     import { Label } from "$lib/components/ui/label/index.js";
+    import { Avatar } from "$lib/components/ui/avatar/index.js";
 
     let ogProfile = {
         name: "TigerApps",
         email: "TigerApps@gmail.com",
         bio: "Hello, I am TigerApps",
         number: "123-456-7890",
-        payment: "@TigerApps"
+        payment: "@TigerApps",
+        image: null as string | null
     };
 
-    let profile = $state({ ...ogProfile });
-    let isEditing = $state(false);
+    let profile = { ...ogProfile };
+    let isEditing = false;
+    let fileInput: HTMLInputElement;
+
+    const handleImageChange = (event: Event) => {
+        const target = event.target as HTMLInputElement;
+        const file = target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                profile.image = e.target?.result as string;
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleEdit = () => {
         if (isEditing) {
@@ -24,7 +38,6 @@
         isEditing = !isEditing;
     };
 
-    // Revert to original values
     const handleCancel = () => {
         if (isEditing) {
             profile = { ...ogProfile };
@@ -32,35 +45,68 @@
         }
     };
 
-    let isFormValid = $derived(
+    $: isFormValid =
         profile.name.trim() !== "" &&
-            profile.email.includes("@") &&
-            profile.number.trim() !== ""
-    );
+        profile.email.includes("@") &&
+        profile.number.trim() !== "";
 </script>
 
-<section class="w-full std-area">
+<div class="relative w-full max-w-6xl border border-blue-400 p-6">
     <div class="w-full">
         <div class="mb-6 flex items-center justify-between">
-            <span class="text-lg">Profile Info</span>
+            <span>Profile Info</span>
             <div class="space-x-2">
                 {#if isEditing}
-                    <Button onclick={handleCancel} variant="outline"
-                        >Cancel</Button>
-                    <Button onclick={handleEdit} disabled={!isFormValid}
-                        >Save</Button>
+                    <button
+                        on:click={handleCancel}
+                        class="rounded bg-gray-400 px-3 py-1 font-bold text-white hover:bg-gray-500">
+                        Cancel
+                    </button>
+                    <button
+                        on:click={handleEdit}
+                        disabled={!isFormValid}
+                        class="rounded bg-blue-400 px-3 py-1 font-bold text-white hover:bg-blue-200 disabled:bg-gray-300">
+                        Save
+                    </button>
                 {:else}
-                    <Button onclick={handleEdit}>Edit</Button>
+                    <button
+                        on:click={handleEdit}
+                        class="rounded bg-blue-400 px-3 py-1 font-bold text-white hover:bg-blue-200">
+                        Edit
+                    </button>
                 {/if}
             </div>
         </div>
 
-        <div class="mb-6 flex justify-center">
-            <div
-                class="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-gray-200">
-                <!-- You can add an img tag here if you have a specific image -->
-                <span class="text-gray-500">Profile Pic</span>
+        <div class="mb-6 flex justify-center relative">
+            <Avatar class="h-32 w-32">
+                {#if profile.image}
+                <img src={profile.image} alt="Profile" class="h-full w-full object-cover"/>
+                {:else}
+                <span class="text-4xl">
+                    {profile.name.charAt(0).toUpperCase()}
+                </span>
+                {/if}
+            </Avatar>
+
+            {#if isEditing}
+            <div class="absolute bottom-0 right-1/2 transform translate-x-1/2">
+                <input 
+                bind:this={fileInput}
+                type="file"
+                accept="image/*"
+                on:change={handleImageChange}
+                class="hidden"
+                id="profile-image"
+                />
+                <button
+                    on:click={() => fileInput.click()}
+                    class="bg-blue-400 text-white px-2 py-1 rounded-full text-sm hover:bg-blue-500"
+                    >
+                    Change
+                </button>
             </div>
+            {/if}
         </div>
 
         <div class="flex flex-col items-center gap-4">
@@ -133,4 +179,4 @@
             </div>
         </div>
     </div>
-</section>
+</div>
