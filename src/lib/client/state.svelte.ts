@@ -1,5 +1,8 @@
 import { type Box } from "$lib/utils";
-import { type SortOption } from "../../routes/api/items/get/schema";
+import {
+    type ItemElement,
+    type SortOption
+} from "../../routes/api/items/get/schema";
 
 export const sortValues = [
     { value: "date_new", label: "Date (newest first)" },
@@ -35,7 +38,11 @@ export const searchState = $state<Box<SearchState>>({
             category: [],
             quality: []
         },
-        limit: 10,
+        limit: 20,
         offset: 0
     }
+});
+
+export const itemList = $state<Box<ItemElement[]>>({
+    value: []
 });

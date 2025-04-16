@@ -10,6 +10,7 @@
     import ItemView from "./ItemView.svelte";
     import LeftBar from "./LeftBar.svelte";
     import {
+        itemList,
         searchState,
         sortValues,
         type SearchState
@@ -94,7 +95,7 @@
             console.error("Invalid response", itemsValidation.error);
             return;
         }
-        console.log("Items fetched successfully", itemsValidation.data);
+        itemList.value = itemsValidation.data.items;
     };
 </script>
 

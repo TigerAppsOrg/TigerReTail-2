@@ -45,3 +45,4 @@ export const getItemsResponseSchema = z.object({
 // Infer types from Zod schemas
 export type GetItemResponseItem = z.infer<typeof getItemResponseItemSchema>;
 export type GetItemsResponse = z.infer<typeof getItemsResponseSchema>;
+export type ItemElement = GetItemsResponse["items"][number];
