@@ -9,7 +9,18 @@
 
     import ItemView from "./ItemView.svelte";
     import LeftBar from "./LeftBar.svelte";
-    import { searchState, sortValues } from "$lib/client/state.svelte";
+    import {
+        searchState,
+        sortValues,
+        type SearchState
+    } from "$lib/client/state.svelte";
+    import {
+        getItemsResponseSchema,
+        getItemsSchema,
+        type GetItemsState
+    } from "../../api/items/get/schema";
+    import { z } from "zod";
+    import { ZodCategory, ZodQuality } from "$lib";
 
     let { data } = $props();
 
@@ -19,8 +30,71 @@
         sortValues.find((s) => s.value === searchState.value.sortBy)!.label
     );
 
-    const handleSearch = async () => {
+    function handleSearch() {
         searchState.value.query = searchValue;
+    }
+
+    $effect(() => {
+        const state = searchState.value;
+        fetchItems(state);
+    });
+
+    const fetchItems = async (state: SearchState) => {
+        const categories = z
+            .array(ZodCategory)
+            .safeParse(state.filters.category);
+        const qualities = z.array(ZodQuality).safeParse(state.filters.quality);
+
+        if (!categories.success) {
+            console.error("Invalid categories", categories.error);
+            return;
+        }
+        if (!qualities.success) {
+            console.error("Invalid qualities", qualities.error);
+            return;
+        }
+
+        const request: GetItemsState = {
+            sort: state.sortBy,
+            search: state.query,
+            categories: categories.data,
+            qualities: qualities.data,
+            limit: state.limit,
+            offset: state.offset
+        };
+        // Validate the request
+        const validation = getItemsSchema.safeParse(request);
+        if (!validation.success) {
+            console.error("Invalid request", validation.error);
+            return;
+        }
+
+        // TODO: sorting
+        const response = await fetch("/api/items/get", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(validation.data)
+        });
+
+        if (!response.ok) {
+            console.error("Failed 1");
+            return;
+        }
+        const result = await response.json();
+        if (!result) {
+            console.error("Failed 2", result);
+            return;
+        }
+
+        // verify with getItemsResponseSchema
+        const itemsValidation = getItemsResponseSchema.safeParse(result);
+        if (!itemsValidation.success) {
+            console.error("Invalid response", itemsValidation.error);
+            return;
+        }
+        console.log("Items fetched successfully", itemsValidation.data);
     };
 </script>
 
