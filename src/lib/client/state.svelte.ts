@@ -1,12 +1,5 @@
 import { type Box } from "$lib/utils";
-
-export type SortValue =
-    | "date_new"
-    | "date_old"
-    | "name_asc"
-    | "name_desc"
-    | "price_low"
-    | "price_high";
+import { type SortOption } from "../../routes/api/items/get/schema";
 
 export const sortValues = [
     { value: "date_new", label: "Date (newest first)" },
@@ -28,8 +21,10 @@ export type Filters = {
 
 export type SearchState = {
     query: string;
-    sortBy: SortValue;
+    sortBy: SortOption;
     filters: Filters;
+    limit: number;
+    offset: number;
 };
 
 export const searchState = $state<Box<SearchState>>({
@@ -39,6 +34,8 @@ export const searchState = $state<Box<SearchState>>({
         filters: {
             category: [],
             quality: []
-        }
+        },
+        limit: 10,
+        offset: 0
     }
 });
