@@ -77,7 +77,8 @@ export const items = pgTable(
         description: text("description"),
         status: statusEnum("status").notNull(),
         item_type: itemTypesEnum("item_type").notNull(),
-        legacy_id: integer("legacy_id").unique()
+        legacy_id: integer("legacy_id").unique(),
+        deleted: boolean("deleted").default(false)
     },
     (table) => ({
         searchIndex: index("search_index").using(
@@ -130,18 +131,31 @@ export const itemImagesRelations = relations(itemImages, ({ one }) => ({
     })
 }));
 
-export const requests = pgTable("requests", {
-    id: serial("id").primaryKey(),
-    user_id: integer("user_id")
-        .notNull()
-        .references(() => user.id, {}),
-    time_posted: timestamp("time_posted").notNull(),
-    time_expire: timestamp("time_expire").notNull(),
-    name: text("name").notNull(),
-    price: numeric("price").notNull(),
-    description: text("description"),
-    legacy_id: integer("legacy_id").unique()
-});
+export const requests = pgTable(
+    "requests",
+    {
+        id: serial("id").primaryKey(),
+        user_id: integer("user_id")
+            .notNull()
+            .references(() => user.id, {}),
+        time_posted: timestamp("time_posted").notNull(),
+        time_expire: timestamp("time_expire").notNull(),
+        name: text("name").notNull(),
+        price: numeric("price").notNull(),
+        description: text("description"),
+        legacy_id: integer("legacy_id").unique(),
+        deleted: boolean("deleted").default(false)
+    },
+    (table) => ({
+        searchIndex: index("search_index").using(
+            "gin",
+            sql`(
+            setweight(to_tsvector('english', ${table.name}), 'A') ||
+            setweight(to_tsvector('english', coalesce(${table.description}, '')), 'B')
+        )`
+        )
+    })
+);
 
 export const requestsRelations = relations(requests, ({ one, many }) => ({
     user: one(user, {
